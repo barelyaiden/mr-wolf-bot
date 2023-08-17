@@ -1,0 +1,18 @@
+{
+    "token": "",
+    "owners": [
+        ""
+    ],
+    "roles": {
+        "moderatorRole": "",
+        "mutedRole": ""
+    },
+    "channels": {
+        "logsChannel": "",
+        "gatewayChannel": "",
+        "rulesChannel": ""
+    },
+    "categories": {
+        "moderatorCategory": ""
+    }
+}
