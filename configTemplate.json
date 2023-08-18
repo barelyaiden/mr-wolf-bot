@@ -1,11 +1,15 @@
 {
     "token": "",
-    "owners": [
-        ""
-    ],
+    "prefix": "",
+    "owners": [],
+    "users": {
+        "kyle": "",
+        "kyleOnly": []
+    },
     "roles": {
         "moderatorRole": "",
-        "mutedRole": ""
+        "mutedRole": "",
+        "guestRole": ""
     },
     "channels": {
         "logsChannel": "",

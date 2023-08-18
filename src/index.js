@@ -1,10 +1,10 @@
 const { SapphireClient } = require('@sapphire/framework');
 const { GatewayIntentBits, ActivityType } = require('discord.js');
-const { token } = require('../config.json');
+const { token, prefix } = require('../config.json');
 
 const client = new SapphireClient({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
-    defaultPrefix: '!',
+    defaultPrefix: prefix,
     loadMessageCommandListeners: true,
     presence: {
         activities: [{
