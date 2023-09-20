@@ -10,6 +10,7 @@ class ReadyListener extends Listener {
     }
 
     run(client) {
+        client.DeadUsernames.sync();
         const { username, id } = client.user;
         this.container.logger.info(`Successfully logged in as ${username} (${id})`);
     }
