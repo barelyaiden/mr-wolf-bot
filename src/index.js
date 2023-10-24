@@ -9,7 +9,7 @@ const client = new SapphireClient({
     loadMessageCommandListeners: true,
     presence: {
         activities: [{
-            name: 'the gang rob a bank',
+            name: 'my gang rob a bank',
             type: ActivityType.Watching
         }]
     }
@@ -21,14 +21,10 @@ const sequelize = new Sequelize({
     logging: false
 });
 
-client.DeadUsernames = sequelize.define('deadUsernames', {
+client.MutedMembers = sequelize.define('mutedMembers', {
     userId: {
         type: DataTypes.STRING,
         unique: true,
-        allowNull: false
-    },
-    name: {
-        type: DataTypes.STRING,
         allowNull: false
     }
 });

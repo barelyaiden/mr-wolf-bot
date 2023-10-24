@@ -21,28 +21,37 @@ class HelpCommand extends Command {
         
         if (!commandName) {
             const commands = this.container.stores.get('commands');
-            const infoCommands = commands.filter((command) => command.fullCategory[0] === 'Info');
-            const utilityCommands = commands.filter((command) => command.fullCategory[0] === 'Utility');
             const funCommands = commands.filter((command) => command.fullCategory[0] === 'Fun');
+            const infoCommands = commands.filter((command) => command.fullCategory[0] === 'Info');
             const moderationCommands = commands.filter((command) => command.fullCategory[0] === 'Moderation');
+            const ownerCommands = commands.filter((command) => command.fullCategory[0] === 'Owner');
+            const utilityCommands = commands.filter((command) => command.fullCategory[0] === 'Utility');
 
             const commandsEmbed = new EmbedBuilder()
                 .setColor(0xfbfbfb)
-                .setAuthor({ name: 'List of available commands.', iconURL: message.client.user.displayAvatarURL({ extension: 'png', dynamic: true }) })
+                .setAuthor({ name: 'List of Available Commands', iconURL: message.client.user.displayAvatarURL({ dynamic: true }) })
                 .addFields(
+                    { name: 'Fun:', value: `${prefix}${(funCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true },
                     { name: 'Info:', value: `${prefix}${(infoCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true },
-                    { name: 'Utility:', value: `${prefix}${(utilityCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true },
-                    { name: 'Fun:', value: `${prefix}${(funCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true }
+                    { name: 'Utility:', value: `${prefix}${(utilityCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true }
                 )
                 .setTimestamp();
 
             if (message.channel.parent.name === categories.moderatorCategory) {
+                if (message.author.id === owners[0]) {
+                    commandsEmbed.addFields(
+                        { name: 'Owner:', value: `${prefix}${(ownerCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true }
+                    );
+                }
+
                 commandsEmbed.addFields(
                     { name: 'Moderation:', value: `${prefix}${(moderationCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true }
                 );
+
+                commandsEmbed.setFooter({ text: '⚠️ Hidden commands are being shown.' });
             }
 
-            return message.reply({ embeds: [commandsEmbed] });
+            return message.channel.send({ embeds: [commandsEmbed] });
         } else {
             const command = this.container.stores.get('commands').get(commandName);
             if (!command) return;
@@ -52,7 +61,7 @@ class HelpCommand extends Command {
 
             const commandEmbed = new EmbedBuilder()
                 .setColor(0xfbfbfb)
-                .setAuthor({ name: `Command: ${prefix}${command.name}`, iconURL: message.client.user.displayAvatarURL({ extension: 'png', dynamic: true }) })
+                .setAuthor({ name: `Command: ${prefix}${command.name}`, iconURL: message.client.user.displayAvatarURL({ dynamic: true }) })
                 .setDescription(command.description)
                 .addFields(
                     { name: 'Category:', value: command.category, inline: true }
@@ -67,7 +76,7 @@ class HelpCommand extends Command {
                 );
             }
 
-            return message.reply({ embeds: [commandEmbed] });
+            return message.channel.send({ embeds: [commandEmbed] });
         }
     }
 }

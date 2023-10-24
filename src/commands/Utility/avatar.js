@@ -1,5 +1,5 @@
 const { Command } = require('@sapphire/framework');
-const { AttachmentBuilder } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { owners } = require('../../../config.json');
 const fs = require('node:fs');
 
@@ -8,7 +8,7 @@ class AvatarCommand extends Command {
         super(context, {
             ...options,
             name: 'avatar',
-            aliases: ['pfp'],
+            aliases: ['pfp', 'gavatar', 'gpfp'],
             description: 'Get a member\'s avatar.',
             detailedDescription: {
                 usage: '(member)',
@@ -19,28 +19,39 @@ class AvatarCommand extends Command {
 
     async messageRun(message, args) {
         const member = await args.pick('member').catch(() => null);
-        let fetchedMember;
+        let msg, avatar;
+        let isAiden = false;
 
         if (!member || member.user.id === message.author.id) {
-            if (message.author.id === owners[0]) {
-                return this.getWolfAvatar(message);
-            } else {
-                fetchedMember = await message.author.fetch();
-                if (!fetchedMember.avatarURL()) return message.reply('You don\'t have an avatar.');
-                return message.reply({ content: 'Your avatar:', files: [fetchedMember.avatarURL({ extension: 'png', dynamic: true, size: 4096 })] });
-            }
+            if (!message.member.displayAvatarURL()) return message.channel.send('You don\'t have an avatar.');
+            msg = 'Your Avatar:';
+            avatar = message.member.displayAvatarURL({ extension: 'png', dynamic: true, size: 1024 });
+            if (args.commandContext.commandName.startsWith('g')) avatar = message.author.displayAvatarURL({ extension: 'png', dynamic: true, size: 1024 });
+            if (!member && message.author.id === owners[0] || member && member.user.id === owners[0]) isAiden = true;
+        } else {
+            if (!member.displayAvatarURL()) return message.channel.send('That member does not have an avatar.');
+            msg = `${member.user.username}${(member.user.username.endsWith('s')) ? '\'' : '\'s'} Avatar:`;
+            avatar = member.displayAvatarURL({ extension: 'png', dynamic: true, size: 1024 });
+            if (member.user.id === message.client.user.id) msg = 'My Avatar:';
+            if (args.commandContext.commandName.startsWith('g')) avatar = member.user.avatarURL({ extension: 'png', dynamic: true, size: 1024 });
+            if (member.user.id === owners[0]) isAiden = true;
         }
 
-        fetchedMember = await member.user.fetch();
+        const avatarEmbed = new EmbedBuilder()
+            .setColor(0xfbfbfb)
+            .setAuthor({ name: msg, iconURL: avatar })
+            .setImage(avatar)
+            .setTimestamp();
 
-        if (member.user.id === message.client.user.id) {
-            return message.reply({ content: 'My avatar!', files: [fetchedMember.avatarURL({ extension: 'png', dynamic: true, size: 4096 })] });
+        if (isAiden) {
+            const wolfAvatar = await this.getWolfAvatar();
+            const attachmentName = `attachment://${wolfAvatar.substring(wolfAvatar.lastIndexOf('/') + 1)}`;
+            avatarEmbed.setAuthor({ name: msg, iconURL: attachmentName });
+            avatarEmbed.setImage(attachmentName);
+            return message.channel.send({ embeds: [avatarEmbed], files: [wolfAvatar] });
         }
-
-        if (member.user.id === owners[0]) return this.getWolfAvatar(message, member);
-        if (!fetchedMember.avatarURL()) return message.reply('That member doesn\'t have an avatar.');
-
-        return message.reply({ content: `${member.user.username}${(member.user.username.endsWith('s')) ? '\'' : '\'s'} avatar:`, files: [fetchedMember.avatarURL({ extension: 'png', dynamic: true, size: 4096 })] });
+        
+        return message.channel.send({ embeds: [avatarEmbed] });
     }
 
     getFiles(dir, files = []) {
@@ -59,7 +70,7 @@ class AvatarCommand extends Command {
         return files;
     }
     
-    async getWolfAvatar(message, member=null) {
+    async getWolfAvatar() {
         let wolfAvatar;
         const randomChance = Math.floor(Math.random() * 100);
 
@@ -70,13 +81,7 @@ class AvatarCommand extends Command {
             wolfAvatar = wolfAvatars[Math.floor(Math.random() * wolfAvatars.length)];
         }
         
-        const attachment = new AttachmentBuilder(wolfAvatar);
-
-        if (member) {
-            await message.reply({ content: `${member.user.username}${(member.user.username.endsWith('s')) ? '\'' : '\'s'} avatar:`, files: [attachment] });
-        } else {
-            await message.reply({ content: 'Your avatar:', files: [attachment] });
-        }
+        return wolfAvatar;
     }
 }
 

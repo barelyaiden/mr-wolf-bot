@@ -18,10 +18,11 @@ class SayCommand extends Command {
     async messageRun(message, args) {
         const messageToRepeat = args.finished ? '' : await args.rest('string');
 
+        await message.delete();
+
         if (messageToRepeat.length < 1 && message.attachments.size < 1) {
-            return message.delete();
+            return;
         } else {
-            await message.delete();
             if (message.attachments.size < 1) return message.channel.send(messageToRepeat);
             return message.channel.send({ content: messageToRepeat, files: [message.attachments.first().proxyURL] });
         }

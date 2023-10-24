@@ -19,10 +19,11 @@ class ReplyCommand extends Command {
         const messageId = await args.pick('string').catch(() => null);
         const messageToRepeat = args.finished ? '' : await args.rest('string');
 
+        await message.delete();
+
         if (!messageId || !/\d/.test(messageId) || messageToRepeat.length < 1 && message.attachments.size < 1) {
-            return message.delete();
+            return;
         } else {
-            await message.delete();
             const messageToReplyTo = await message.channel.messages.fetch(messageId);
             if (message.attachments.size < 1) return messageToReplyTo.reply(messageToRepeat);
             return messageToReplyTo.reply({ content: messageToRepeat, files: [message.attachments.first().proxyURL] });

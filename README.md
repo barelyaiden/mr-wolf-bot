@@ -1,6 +1,6 @@
 # Mr. Wolf
 Hey, you! Get over here...\
-A simple Discord bot for the aiden's household server.
+A simple Discord bot for aiden's office
 
 ### Including:
 - Fun commands for users to play with
@@ -10,8 +10,8 @@ A simple Discord bot for the aiden's household server.
 
 ### Requirements:
 
-- You only need to meet the npm installation requirements of the included Discord.js version.
-- Make sure to edit the configuration file before launching the bot (a template is included).
+- You only need to meet the npm installation requirements of the included Discord.js version
+- Make sure to edit the configuration file before launching the bot (a template is included)
 
 # Notice of Non-Affiliation and Disclaimer
 

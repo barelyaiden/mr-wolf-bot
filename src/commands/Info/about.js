@@ -17,17 +17,18 @@ class AboutCommand extends Command {
     async messageRun(message) {
         const aboutEmbed = new EmbedBuilder()
             .setColor(0xfbfbfb)
-            .setAuthor({ name: 'About Mr. Wolf Bot', iconURL: message.client.user.displayAvatarURL({ extension: 'png', dynamic: true })})
+            .setAuthor({ name: 'About Mr. Wolf Bot', iconURL: message.client.user.displayAvatarURL({ dynamic: true })})
             .setDescription(description)
             .addFields(
-                { name: 'Author:', value: author, inline: true },
-                { name: 'Version:', value: version, inline: true },
-                { name: 'Library:', value: `discord.js${dependencies['discord.js']}`, inline: true }
+                { name: 'Author:', value: author },
+                { name: 'Version:', value: version },
+                { name: 'Library:', value: `discord.js ${dependencies['discord.js'].substring(1)}` },
+                { name: 'Runtime:', value: `Node.js ${process.version.substring(1)}` }
             )
-            .setFooter({ text: `Coded with ❤️ Uptime: ${moment.duration(message.client.uptime).format('D [days] H [hours] m [mins] s [secs]')}` })
+            .setFooter({ text: `Uptime: ${moment.duration(message.client.uptime).format('h:mm:ss', { trim: false })}` })
             .setTimestamp();
 
-        return message.reply({ embeds: [aboutEmbed] });
+        return message.channel.send({ embeds: [aboutEmbed] });
     }
 }
 

@@ -2,13 +2,10 @@
     "token": "",
     "prefix": "",
     "owners": [],
-    "users": {
-        "yapixx": ""
-    },
     "roles": {
         "moderatorRole": "",
         "mutedRole": "",
-        "guestRole": ""
+        "visitorRole": ""
     },
     "channels": {
         "logsChannel": "",
