@@ -12,7 +12,7 @@ class GuildMemberAddListener extends Listener {
     async run(member) {
         const gatewayChannel = await member.guild.channels.cache.find(ch => ch.name === channels.gatewayChannel);
         const rulesChannel = await member.guild.channels.cache.find(ch => ch.name === channels.rulesChannel);
-        await gatewayChannel.send(`Welcome to the server ${member}! Make sure to read the ${rulesChannel} and enjoy your stay!`);
+        await gatewayChannel.send(`**Welcome to the server ${member}!**\nMake sure to read the ${rulesChannel} and enjoy your stay!`);
 
         const mutedMember = await member.client.MutedMembers.findOne({ where: { userId: member.user.id } });
 

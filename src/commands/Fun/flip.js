@@ -12,7 +12,7 @@ class FlipCommand extends Command {
 
     async messageRun(message) {
         const sides = ['Heads', 'Tails'];
-        return message.channel.send(`🪙 | ${sides[Math.floor(Math.random() * sides.length)]}!`);
+        return message.channel.send(`**[🪙]** ${sides[Math.floor(Math.random() * sides.length)]}!`);
     }
 }
 

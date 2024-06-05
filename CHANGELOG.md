@@ -1,3 +1,19 @@
+## [1.1.2] - TBD
+
+### Added
+
+- Added a banner for the test bot's profile page
+- Added the `!temps`, `!time`, `!timezone` and `!settimezone` commands
+
+### Changed
+
+- Improved the bot's status message
+- Improved response messages all across the board
+
+### Removed
+
+- The license file
+
 ## [1.1.1] - 2024-06-04
 
 ### Added

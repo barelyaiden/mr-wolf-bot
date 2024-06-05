@@ -30,9 +30,9 @@ class GayTestCommand extends Command {
         let msg;
 
         if (!member || member.user.id === message.author.id) {
-            msg = `You are ${gayPercentage}% gay!`;
+            msg = `You are **${gayPercentage}%** gay!`;
         } else {
-            msg = `${member.user.username} is ${gayPercentage}% gay!`;
+            msg = `${member.user.username} is **${gayPercentage}%** gay!`;
         }
 
         switch (gayPercentage) {

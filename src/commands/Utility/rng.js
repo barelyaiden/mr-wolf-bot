@@ -16,7 +16,7 @@ class RNGCommand extends Command {
     async messageRun(message, args) {
         const firstNumber = await args.pick('number').catch(() => 1);
         const secondNumber = await args.pick('number').catch(() => firstNumber + 99);
-        return message.channel.send(`🎲 | ${Math.floor(Math.random() * (secondNumber - firstNumber + 1) + firstNumber)}`);
+        return message.channel.send(`**[🎲]** ${Math.floor(Math.random() * (secondNumber - firstNumber + 1) + firstNumber)}`);
     }
 }
 

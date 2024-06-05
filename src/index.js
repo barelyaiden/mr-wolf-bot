@@ -9,7 +9,7 @@ const client = new SapphireClient({
     loadMessageCommandListeners: true,
     presence: {
         activities: [{
-            name: 'my gang rob a bank',
+            name: 'the gang rob a bank!',
             type: ActivityType.Watching
         }]
     }
@@ -25,6 +25,18 @@ client.MutedMembers = sequelize.define('mutedMembers', {
     userId: {
         type: DataTypes.STRING,
         unique: true,
+        allowNull: false
+    }
+});
+
+client.TimeZones = sequelize.define('timeZones', {
+    userId: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+    },
+    timeZone: {
+        type: DataTypes.STRING,
         allowNull: false
     }
 });

@@ -16,8 +16,8 @@ class EightBallCommand extends Command {
 
     async messageRun(message, args) {
         const question = await args.rest('string').catch(() => null);
-        if (!question) return message.channel.send('🎱 | What is your question for the magic 8-ball?');
-        return message.channel.send(`🎱 | ${this.validAnswers[Math.floor(Math.random() * this.validAnswers.length)]}`);
+        if (!question) return message.channel.send('**[🎱]** What is your question for the magic 8-ball?');
+        return message.channel.send(`**[🎱]** ${this.validAnswers[Math.floor(Math.random() * this.validAnswers.length)]}`);
     }
 
     validAnswers = [

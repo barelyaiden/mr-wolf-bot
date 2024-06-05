@@ -25,9 +25,9 @@ class FurryTestCommand extends Command {
         let msg;
 
         if (!member || member.user.id === message.author.id) {
-            msg = `You are ${furryPercentage}% a furry!`;
+            msg = `You are **${furryPercentage}%** a furry!`;
         } else {
-            msg = `${member.user.username} is ${furryPercentage}% a furry!`;
+            msg = `${member.user.username} is **${furryPercentage}%** a furry!`;
         }
 
         switch (furryPercentage) {
