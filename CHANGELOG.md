@@ -1,3 +1,17 @@
+## [1.1.1] - 2024-06-04
+
+### Added
+
+- Added a trailing newline in files that didn't have them
+- Added a banner for the bot's profile page
+
+### Changed
+
+- Updated the server's name in the `README.md` file
+- Updated the dependencies to the latest versions
+- Updated the license to current year 2024
+- Updated the config file template to match the current server theme
+
 ## [1.1.0] - 2023-10-24
 
 ### Added

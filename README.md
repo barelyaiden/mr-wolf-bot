@@ -1,6 +1,6 @@
 # Mr. Wolf
 Hey, you! Get over here...\
-A simple Discord bot for aiden's office
+A simple Discord bot for aiden's household
 
 ### Including:
 - Fun commands for users to play with

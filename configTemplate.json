@@ -5,7 +5,7 @@
     "roles": {
         "moderatorRole": "",
         "mutedRole": "",
-        "visitorRole": ""
+        "guestRole": ""
     },
     "channels": {
         "logsChannel": "",
