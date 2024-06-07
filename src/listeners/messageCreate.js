@@ -11,7 +11,7 @@ class MessageCreateListener extends Listener {
     async run(message) {
         const randomChance = Math.random() * 100;
 
-        if (randomChance <= 25) {
+        if (randomChance <= 15) {
             let fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
 
             if (!fagBucks) {
@@ -23,7 +23,7 @@ class MessageCreateListener extends Listener {
                 fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
             }
 
-            return fagBucks.update({ amount: fagBucks.amount + 20 });
+            return fagBucks.update({ amount: fagBucks.amount + 10 });
         }
     }
 }
