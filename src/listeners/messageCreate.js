@@ -9,6 +9,8 @@ class MessageCreateListener extends Listener {
     }
 
     async run(message) {
+        if (message.author.bot) return;
+
         const randomChance = Math.random() * 100;
 
         if (randomChance <= 15) {

@@ -44,7 +44,7 @@ class GiveCommand extends Command {
 
         await fagBucks.update({ amount: fagBucks.amount + amount });
         await selfFagBucks.update({ amount: selfFagBucks.amount - amount });
-        return message.channel.send(`Successfully gave ${member.user.username} **${fagBucks.amount} 💵 FagBucks**!`);
+        return message.channel.send(`Successfully gave ${member.user.username} **${amount} 💵 FagBucks**!`);
     }
 }
 

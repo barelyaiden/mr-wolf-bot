@@ -18,7 +18,7 @@ class BalanceCommand extends Command {
         const member = await args.pick('member').catch(() => null);
 
         if (member && member.user.id === message.client.user.id) {
-            return message.channel.send('Oh I\'m the OWNER of this operation ALL of the server\'s money is mine sucker!!!')
+            return message.channel.send('Oh I\'m the OWNER of this operation ALL of the server\'s money is mine sucker!!!');
         } else if (member && member.user.bot) {
             return message.channel.send('I\'m sure bots have more important things to do than gamble away all their revenue 💀');
         }
