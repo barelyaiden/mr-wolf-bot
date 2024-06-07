@@ -53,7 +53,7 @@ class StealCommand extends Command {
             fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
         }
 
-        if (fagBucks.amount < 100) return message.channel.send(`${member.user.username} does not have enough **💵 FagBucks** for you to steal!`);
+        if (fagBucks.amount < 250) return message.channel.send(`${member.user.username} does not have enough **💵 FagBucks** for you to steal!`);
 
         const randomChance = Math.random() * 100;
 

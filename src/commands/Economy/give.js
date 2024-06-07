@@ -18,7 +18,7 @@ class GiveCommand extends Command {
     async messageRun(message, args) {
         const member = await args.pick('member').catch(() => null);
         const amount = await args.pick('number').catch(() => null);
-        if (!member || !amount) return commonMessages.sendUsageEmbed(this, message, args);
+        if (!member || !amount || isNaN(amount) || amount < 0) return commonMessages.sendUsageEmbed(this, message, args);
 
         if (member.user.id === message.client.user.id) {
             return message.channel.send('You wanna give me money? THAT\'S MY MONEY!!!');

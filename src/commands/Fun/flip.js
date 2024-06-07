@@ -34,7 +34,7 @@ class FlipCommand extends Command {
         const sides = ['Heads', 'Tails'];
         const botChoice = sides[Math.floor(Math.random() * sides.length)];
 
-        if (!choice || !choices.includes(choice) || !amount || isNaN(amount)) return message.channel.send(`**[🪙]** ${botChoice}!`);
+        if (!choice || !choices.includes(choice) || !amount || isNaN(amount) || amount < 0) return message.channel.send(`**[🪙]** ${botChoice}!`);
 
         let fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
 

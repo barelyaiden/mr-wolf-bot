@@ -1,3 +1,10 @@
+## [1.1.4] - 2024-06-07
+
+### Changed
+
+- Stealing no longer puts people in debt (oops)
+- Infinite money stealing exploit fixed (oops)
+
 ## [1.1.3] - 2024-06-07
 
 ### Added
