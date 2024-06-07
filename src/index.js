@@ -4,7 +4,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 const { token, prefix } = require('../config.json');
 
 const client = new SapphireClient({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
     defaultPrefix: prefix,
     loadMessageCommandListeners: true,
     presence: {
@@ -37,6 +37,18 @@ client.TimeZones = sequelize.define('timeZones', {
     },
     timeZone: {
         type: DataTypes.STRING,
+        allowNull: false
+    }
+});
+
+client.FagBucks = sequelize.define('fagBucks', {
+    userId: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+    },
+    amount: {
+        type: DataTypes.INTEGER,
         allowNull: false
     }
 });

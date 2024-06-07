@@ -21,19 +21,24 @@ class HelpCommand extends Command {
         
         if (!commandName) {
             const commands = this.container.stores.get('commands');
+            const economyCommands = commands.filter((command) => command.fullCategory[0] === 'Economy');
             const funCommands = commands.filter((command) => command.fullCategory[0] === 'Fun');
             const infoCommands = commands.filter((command) => command.fullCategory[0] === 'Info');
             const moderationCommands = commands.filter((command) => command.fullCategory[0] === 'Moderation');
             const ownerCommands = commands.filter((command) => command.fullCategory[0] === 'Owner');
+            const timeCommands = commands.filter((command) => command.fullCategory[0] === 'Time');
             const utilityCommands = commands.filter((command) => command.fullCategory[0] === 'Utility');
 
             const commandsEmbed = new EmbedBuilder()
                 .setColor(0xfbfbfb)
                 .setAuthor({ name: 'List of Available Commands', iconURL: message.client.user.displayAvatarURL({ dynamic: true }) })
                 .addFields(
+                    { name: 'Economy:', value: `${prefix}${(economyCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true },
                     { name: 'Fun:', value: `${prefix}${(funCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true },
                     { name: 'Info:', value: `${prefix}${(infoCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true },
-                    { name: 'Utility:', value: `${prefix}${(utilityCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true }
+                    { name: 'Time:', value: `${prefix}${(timeCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true },
+                    { name: 'Utility:', value: `${prefix}${(utilityCommands.map(command => command.name)).join(`\n${prefix}`)}`, inline: true },
+                    { name: 'TBD:', value: `This is\nhere just\n to make the\nembed look\nnice lmao`, inline: true }
                 )
                 .setTimestamp();
 

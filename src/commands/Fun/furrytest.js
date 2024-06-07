@@ -9,7 +9,7 @@ class FurryTestCommand extends Command {
             description: 'How much of a furry are you?',
             detailedDescription: {
                 usage: '(member)',
-                example: '@wishfn_'
+                example: '@thepoopwitch'
             }
         });
     }

@@ -20,6 +20,8 @@ class TimeCommand extends Command {
 
         if (member && member.user.id === message.client.user.id) {
             return message.channel.send('I don\'t know 24:00 or something?');
+        } else if (member.user.bot) {
+            return message.channel.send('I don\'t... think... they know the time...?');
         }
 
         const timeZone = await message.client.TimeZones.findOne({ where: { userId: member.id } });

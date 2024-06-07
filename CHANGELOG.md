@@ -1,3 +1,17 @@
+## [1.1.3] - 2024-06-07
+
+### Added
+
+- The `!balance`, `!leaderboard`, `!secondchance`, `!give` and `!steal` commands
+- You periodically gain 20 cash just for talking in the server
+- More command categories
+
+### Changed
+
+- The `!flip` command can now be used to gamble money, everyone starts out with 100
+- The command to convert temperatures is now `!temp`
+- You can no longer check the time or time zone of bots
+
 ## [1.1.2] - 2024-06-05
 
 ### Added

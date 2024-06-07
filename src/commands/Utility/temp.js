@@ -5,8 +5,8 @@ class TempsCommand extends Command {
     constructor(context, options) {
         super(context, {
             ...options,
-            name: 'temps',
-            aliases: ['temperature', 'converttemps', 'converttemperature'],
+            name: 'temp',
+            aliases: ['temperature', 'temps'],
             description: 'Convert temperatures between Celsius and Fahrenheit.',
             detailedDescription: {
                 usage: '[temperature]',
