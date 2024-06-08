@@ -13,7 +13,6 @@ class SecondChanceCommand extends Command {
     }
 
     async messageRun(message) {
-        // Don't apply cooldown if the command doesn't succeed.
         const randomChance = Math.random() * 100;
         let loan = 100;
         if (randomChance <= 5) loan = 500;
@@ -26,10 +25,14 @@ class SecondChanceCommand extends Command {
                 amount: 100
             });
 
+            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             return message.channel.send(`You have received your starting amount of **100 💵 FagBucks** since you're new!\nNo second chance needed... for now...`);
         }
 
-        if (fagBucks.amount !== 0) return message.channel.send(`You already have **${fagBucks.amount} 💵 FagBucks**!`);
+        if (fagBucks.amount !== 0) {
+            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
+            return message.channel.send(`You already have **${fagBucks.amount} 💵 FagBucks**!`);
+        }
 
         await fagBucks.update({ amount: loan });
         return message.channel.send(`You have been given a second chance... at gambling!\n**You have received ${loan} 💵 FagBucks!**`);

@@ -6,7 +6,7 @@ class FlipCommand extends Command {
         super(context, {
             ...options,
             name: 'flip',
-            aliases: ['coinflip'],
+            aliases: ['coinflip', 'f'],
             description: 'Flip a coin!',
             detailedDescription: {
                 usage: '(choice) (amount)',
@@ -47,7 +47,7 @@ class FlipCommand extends Command {
             fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
         }
 
-        if (amount > fagBucks.amount) return message.channel.send(`You only have ** ${fagBucks.amount} 💵 FagBucks**!`);
+        if (amount > fagBucks.amount) return message.channel.send(`You only have **${fagBucks.amount} 💵 FagBucks**!`);
 
         const randomChance = Math.random() * 100;
         let multiplier;

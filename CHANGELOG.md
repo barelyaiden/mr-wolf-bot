@@ -1,3 +1,15 @@
+## [1.1.5] - 2024-06-08
+
+### Added
+
+- The `!daily` command
+
+### Changed
+
+- Cooldowns no longer apply if the command doesn't finish it's primary function
+- Fixed a typo in the `!flip` command
+- The `!flip` command now has an alias of `!f`
+
 ## [1.1.4] - 2024-06-07
 
 ### Changed

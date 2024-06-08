@@ -19,13 +19,19 @@ class StealCommand extends Command {
 
     async messageRun(message, args) {
         const member = await args.pick('member').catch(() => null);
-        if (!member) return commonMessages.sendUsageEmbed(this, message, args);
+        if (!member) {
+            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
+            return commonMessages.sendUsageEmbed(this, message, args);
+        }
 
         if (member.user.id === message.client.user.id) {
+            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             return message.channel.send('If you steal my money you basically lose yours pal.');
         } else if (member.user.bot) {
+            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             return message.channel.send('Okay well that\'s just mean if you wanna steal from an innocent little bot 🥺');
         } else if (member.user.id === message.author.id) {
+            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             return message.channel.send('How would you even steal from yourself? Go buy ice cream? That\'s stupid.');
         }
 
@@ -53,7 +59,10 @@ class StealCommand extends Command {
             fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
         }
 
-        if (fagBucks.amount < 250) return message.channel.send(`${member.user.username} does not have enough **💵 FagBucks** for you to steal!`);
+        if (fagBucks.amount < 250) {
+            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
+            return message.channel.send(`${member.user.username} does not have enough **💵 FagBucks** for you to steal!`);
+        }
 
         const randomChance = Math.random() * 100;
 
