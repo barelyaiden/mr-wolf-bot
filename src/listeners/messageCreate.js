@@ -1,4 +1,5 @@
 const { Listener } = require('@sapphire/framework');
+const random = require('random');
 
 class MessageCreateListener extends Listener {
     constructor(context, options) {
@@ -11,7 +12,7 @@ class MessageCreateListener extends Listener {
     async run(message) {
         if (message.author.bot) return;
 
-        const randomChance = Math.random() * 100;
+        const randomChance = random.int(0, 100);
 
         if (randomChance <= 15) {
             let fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
@@ -25,7 +26,7 @@ class MessageCreateListener extends Listener {
                 fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
             }
 
-            return fagBucks.update({ amount: fagBucks.amount + 10 });
+            await fagBucks.update({ amount: fagBucks.amount + 10 });
         }
     }
 }

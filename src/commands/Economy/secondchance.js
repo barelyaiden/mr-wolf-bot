@@ -1,5 +1,6 @@
 const { Command } = require('@sapphire/framework');
 const { Time } = require('@sapphire/time-utilities');
+const random = require('random');
 
 class SecondChanceCommand extends Command {
     constructor(context, options) {
@@ -13,7 +14,7 @@ class SecondChanceCommand extends Command {
     }
 
     async messageRun(message) {
-        const randomChance = Math.random() * 100;
+        const randomChance = random.int(0, 100);
         let loan = 100;
         if (randomChance <= 5) loan = 500;
 

@@ -1,4 +1,5 @@
 const { Command } = require('@sapphire/framework');
+const random = require('random');
 
 class FurryTestCommand extends Command {
     constructor(context, options) {
@@ -16,7 +17,7 @@ class FurryTestCommand extends Command {
 
     async messageRun(message, args) {
         const member = await args.pick('member').catch(() => null);
-        const furryPercentage = Math.floor(Math.random() * 100);
+        const furryPercentage = random.int(0, 100);
 
         if (member && member.user.id === message.client.user.id) {
             return message.channel.send('What do you think big shot?');

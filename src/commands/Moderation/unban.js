@@ -26,6 +26,7 @@ class UnbanCommand extends Command {
         if (userId === owners[0]) return message.channel.send('The server owner can\'t be banned in the first place!');
 
         const logsChannel = await message.guild.channels.cache.find(ch => ch.name === channels.logsChannel);
+        
         const logEmbed = new EmbedBuilder()
             .setColor(0xfbfbfb)
             .setAuthor({ name: 'A user was unbanned.', iconURL: message.client.user.displayAvatarURL({ dynamic: true }) })
@@ -34,6 +35,7 @@ class UnbanCommand extends Command {
                 { name: 'Moderator:', value: `${message.author}`, inline: true },
             )
             .setTimestamp();
+        
         const successEmbed = new EmbedBuilder()
             .setColor(0xfbfbfb)
             .setAuthor({ name: `User Id: ${userId} has been unbanned.`, iconURL: message.client.user.displayAvatarURL({ dynamic: true }) })

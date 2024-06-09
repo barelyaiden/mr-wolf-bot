@@ -19,6 +19,7 @@ class GiveCommand extends Command {
         const member = await args.pick('member').catch(() => null);
         const amount = await args.pick('number').catch(() => null);
         if (!member || !amount || isNaN(amount) || amount < 0) return commonMessages.sendUsageEmbed(this, message, args);
+        if (amount % 1 != 0) return message.channel.send('You can only input whole numbers!');
 
         if (member.user.id === message.client.user.id) {
             return message.channel.send('You wanna give me money? THAT\'S MY MONEY!!!');
@@ -29,13 +30,23 @@ class GiveCommand extends Command {
         }
 
         const selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+
+        if (!selfFagBucks) {
+            await message.client.FagBucks.create({
+                userId: message.author.id,
+                amount: 100
+            });
+
+            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+        }
+
         if (amount > selfFagBucks.amount) return message.channel.send(`You only have **${selfFagBucks.amount} 💵 FagBucks**!`);
 
         let fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
 
         if (!fagBucks) {
             await message.client.FagBucks.create({
-                userId: message.author.id,
+                userId: member.user.id,
                 amount: 100
             });
 

@@ -53,4 +53,20 @@ client.FagBucks = sequelize.define('fagBucks', {
     }
 });
 
+client.DeadMembers = sequelize.define('deadMembers', {
+    userId: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+    },
+    nickname: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    originalNickname: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+});
+
 client.login(token);

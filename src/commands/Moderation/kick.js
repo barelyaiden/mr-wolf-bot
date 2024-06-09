@@ -27,6 +27,7 @@ class KickCommand extends Command {
         if (member.roles.cache.some(role => role.name === roles.moderatorRole)) return message.channel.send('Can\'t kick moderators!');
 
         const logsChannel = await message.guild.channels.cache.find(ch => ch.name === channels.logsChannel);
+        
         const logEmbed = new EmbedBuilder()
             .setColor(0xfbfbfb)
             .setAuthor({ name: `${member.user.username} was kicked.`, iconURL: member.displayAvatarURL({ dynamic: true }) })
@@ -37,6 +38,7 @@ class KickCommand extends Command {
             )
             .setFooter({ text: `ID: ${member.user.id}` })
             .setTimestamp();
+        
         const successEmbed = new EmbedBuilder()
             .setColor(0xfbfbfb)
             .setAuthor({ name: `${member.user.username} has been kicked.`, iconURL: member.displayAvatarURL({ dynamic: true }) })

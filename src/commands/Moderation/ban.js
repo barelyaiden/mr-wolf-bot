@@ -27,6 +27,7 @@ class BanCommand extends Command {
         if (member.roles.cache.some(role => role.name === roles.moderatorRole)) return message.channel.send('Can\'t ban moderators!');
 
         const logsChannel = await message.guild.channels.cache.find(ch => ch.name === channels.logsChannel);
+        
         const logEmbed = new EmbedBuilder()
             .setColor(0xfbfbfb)
             .setAuthor({ name: `${member.user.username} was banned.`, iconURL: member.displayAvatarURL({ dynamic: true }) })
@@ -37,6 +38,7 @@ class BanCommand extends Command {
             )
             .setFooter({ text: `ID: ${member.user.id}` })
             .setTimestamp();
+        
         const successEmbed = new EmbedBuilder()
             .setColor(0xfbfbfb)
             .setAuthor({ name: `${member.user.username} has been banned.`, iconURL: member.displayAvatarURL({ dynamic: true }) })

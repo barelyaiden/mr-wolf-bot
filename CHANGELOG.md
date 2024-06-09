@@ -1,3 +1,22 @@
+## [1.1.6] - 2024-06-09
+
+### Added
+
+- Added the `!rps` command
+- Added the `!kill` and `!revive` commands (moderators only)
+- Added the `!add` and `!remove` commands (owner only)
+
+### Changed
+
+- The `!flip` command now tells you how much you gained instead of won total
+- Removed multipliers with decimal points from the `!flip` command
+- You can now only gamble up to 500 cash using the `!flip` command
+- Economy commands now require whole numbers
+- Fixed a bug where some commands wouldn't properly grant new members 100 cash
+- Improved the random number generation algorithm
+- Improved the calculation of random chances
+- Improved the response from the `!choose` command
+
 ## [1.1.5] - 2024-06-08
 
 ### Added

@@ -13,6 +13,7 @@ class ReadyListener extends Listener {
         client.MutedMembers.sync();
         client.TimeZones.sync();
         client.FagBucks.sync();
+        client.DeadMembers.sync();
         const { username, id } = client.user;
         this.container.logger.info(`Successfully logged in as ${username} (${id})!`);
     }

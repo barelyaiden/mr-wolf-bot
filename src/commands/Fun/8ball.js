@@ -1,4 +1,5 @@
 const { Command } = require('@sapphire/framework');
+const random = require('random');
 
 class EightBallCommand extends Command {
     constructor(context, options) {
@@ -17,7 +18,7 @@ class EightBallCommand extends Command {
     async messageRun(message, args) {
         const question = await args.rest('string').catch(() => null);
         if (!question) return message.channel.send('**[🎱]** What is your question for the magic 8-ball?');
-        return message.channel.send(`**[🎱]** ${this.validAnswers[Math.floor(Math.random() * this.validAnswers.length)]}`);
+        return message.channel.send(`**[🎱]** ${this.validAnswers[random.int(0, this.validAnswers.length - 1)]}`);
     }
 
     validAnswers = [

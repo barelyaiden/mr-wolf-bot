@@ -1,4 +1,5 @@
 const { Command } = require('@sapphire/framework');
+const random = require('random');
 
 class RNGCommand extends Command {
     constructor(context, options) {
@@ -16,7 +17,8 @@ class RNGCommand extends Command {
     async messageRun(message, args) {
         const firstNumber = await args.pick('number').catch(() => 1);
         const secondNumber = await args.pick('number').catch(() => firstNumber + 99);
-        return message.channel.send(`**[🎲]** ${Math.floor(Math.random() * (secondNumber - firstNumber + 1) + firstNumber)}`);
+        if (firstNumber % 1 != 0 || secondNumber % 1 != 0) return message.channel.send('You can only input whole numbers!');
+        return message.channel.send(`**[🎲]** ${random.int(firstNumber, secondNumber)}`);
     }
 }
 

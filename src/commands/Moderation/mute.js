@@ -44,6 +44,7 @@ class MuteCommand extends Command {
             )
             .setFooter({ text: `ID: ${member.user.id}` })
             .setTimestamp();
+        
         const successEmbed = new EmbedBuilder()
             .setColor(0xfbfbfb)
             .setAuthor({ name: `${member.user.username} has been muted.`, iconURL: member.displayAvatarURL({ dynamic: true }) })

@@ -1,5 +1,6 @@
 const { Command } = require('@sapphire/framework');
 const { owners } = require('../../../config.json');
+const random = require('random');
 
 class GayTestCommand extends Command {
     constructor(context, options) {
@@ -17,7 +18,7 @@ class GayTestCommand extends Command {
 
     async messageRun(message, args) {
         const member = await args.pick('member').catch(() => null);
-        const gayPercentage = Math.floor(Math.random() * 100);
+        const gayPercentage = random.int(0, 100);
 
         if (!member && message.author.id === owners[0] || member && message.author.id === owners[0] && member.user.id === owners[0]) {
             return message.channel.send('YOU ARE THE MEGA GAY WOLF! **101% GAY!**');

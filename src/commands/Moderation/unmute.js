@@ -39,6 +39,7 @@ class UnmuteCommand extends Command {
             )
             .setFooter({ text: `ID: ${member.user.id}` })
             .setTimestamp();
+        
         const successEmbed = new EmbedBuilder()
             .setColor(0xfbfbfb)
             .setAuthor({ name: `${member.user.username} has been unmuted.`, iconURL: member.displayAvatarURL({ dynamic: true }) })

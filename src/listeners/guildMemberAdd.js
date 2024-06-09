@@ -15,10 +15,17 @@ class GuildMemberAddListener extends Listener {
         await gatewayChannel.send(`**Welcome to the server ${member}!**\nMake sure to read the ${rulesChannel} and enjoy your stay!`);
 
         const mutedMember = await member.client.MutedMembers.findOne({ where: { userId: member.user.id } });
+        const deadMember = await member.client.DeadMembers.findOne({ where: { userId: member.user.id } });
 
         if (mutedMember) {
             const mutedRole = await member.guild.roles.cache.find(role => role.name === roles.mutedRole);
-            return member.roles.add(mutedRole);
+            await member.roles.add(mutedRole);
+        }
+
+        if (deadMember) {
+            const deadRole = await member.guild.roles.cache.find(role => role.name === roles.deadRole);
+            await member.roles.add(deadRole);
+            await member.setNickname(deadMember.nickname);
         }
     }
 }

@@ -1,5 +1,6 @@
 const { Command } = require('@sapphire/framework');
 const { Time } = require('@sapphire/time-utilities');
+const random = require('random');
 
 class FlipCommand extends Command {
     constructor(context, options) {
@@ -32,9 +33,11 @@ class FlipCommand extends Command {
         };
 
         const sides = ['Heads', 'Tails'];
-        const botChoice = sides[Math.floor(Math.random() * sides.length)];
+        const botChoice = sides[random.int(0, sides.length - 1)];
 
         if (!choice || !choices.includes(choice) || !amount || isNaN(amount) || amount < 0) return message.channel.send(`**[🪙]** ${botChoice}!`);
+        if (amount % 1 != 0) return message.channel.send('You can only input whole numbers!');
+        if (amount > 500) return message.channel.send('You can only gamble up to a maximum of **500 💵 FagBucks**!');
 
         let fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
 
@@ -49,22 +52,18 @@ class FlipCommand extends Command {
 
         if (amount > fagBucks.amount) return message.channel.send(`You only have **${fagBucks.amount} 💵 FagBucks**!`);
 
-        const randomChance = Math.random() * 100;
-        let multiplier;
+        const randomChance = random.int(0, 100);
+        let multiplier = 2;
 
-        if (randomChance <= 50) {
-            multiplier = 2;
-        } else if (randomChance <= 75) {
-            multiplier = 2.5;
-        } else if (randomChance <= 95) {
-            multiplier = 3;
-        } else if (randomChance <= 100) {
+        if (randomChance <= 5) {
             multiplier = 4;
+        } else if (randomChance <= 15) {
+            multiplier = 3;
         }
 
         if (mapChoice[choice] === botChoice) {
             await fagBucks.update({ amount: (fagBucks.amount - amount) + (amount * multiplier) });
-            return message.channel.send(`**[🪙]** ${botChoice}!\n**You win ${amount * multiplier} 💵 FagBucks!**`);
+            return message.channel.send(`**[🪙]** ${botChoice}!\n**You gained ${(amount * multiplier) - amount} 💵 FagBucks!**`);
         } else {
             await fagBucks.update({ amount: fagBucks.amount - amount });
             return message.channel.send(`**[🪙]** ${botChoice}!\n**You lost ${amount} 💵 FagBucks!**`);

@@ -2,6 +2,7 @@ const { Command } = require('@sapphire/framework');
 const { EmbedBuilder } = require('discord.js');
 const { owners } = require('../../../config.json');
 const fs = require('node:fs');
+const random = require('random');
 
 class AvatarCommand extends Command {
     constructor(context, options) {
@@ -72,13 +73,13 @@ class AvatarCommand extends Command {
     
     async getWolfAvatar() {
         let wolfAvatar;
-        const randomChance = Math.floor(Math.random() * 100);
+        const randomChance = random.int(0, 100);
 
         if (randomChance === 1) {
             wolfAvatar = './assets/images/secretWolf.png';
         } else {
             const wolfAvatars = this.getFiles('./assets/images/wolfAvatars');
-            wolfAvatar = wolfAvatars[Math.floor(Math.random() * wolfAvatars.length)];
+            wolfAvatar = wolfAvatars[random.int(0, wolfAvatars.length - 1)];
         }
         
         return wolfAvatar;

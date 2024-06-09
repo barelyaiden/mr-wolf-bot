@@ -1,4 +1,5 @@
 const { Command } = require('@sapphire/framework');
+const random = require('random');
 const commonMessages = require('../../utilities/commonMessages');
 
 class ChooseCommand extends Command {
@@ -19,7 +20,7 @@ class ChooseCommand extends Command {
         if (!input) return commonMessages.sendUsageEmbed(this, message, args);
         const items = input.split(', ');
         if (items.length < 2) return message.channel.send(`I choose the only possible option: **${items[0]}**`);
-        return message.channel.send(`I choose: **${items[Math.floor(Math.random() * items.length)]}**`);
+        return message.channel.send(`**[🤔]** ${items[random.int(0, items.length - 1)]}`);
     }
 }
 

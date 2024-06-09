@@ -12,7 +12,13 @@ class GuildMemberUpdateListener extends Listener {
     async run(oldMember, newMember) {
         if (oldMember.pending && !newMember.pending) {
             const guestRole = await newMember.guild.roles.cache.find(role => role.name === roles.guestRole);
-            return newMember.roles.add(guestRole);
+            await newMember.roles.add(guestRole);
+        }
+
+        if (oldMember.nickname !== newMember.nickname) {
+            const deadMember = await newMember.client.DeadMembers.findOne({ where: { userId: newMember.user.id } });
+            if (!deadMember) return;
+            await newMember.setNickname(deadMember.nickname);
         }
     }
 }

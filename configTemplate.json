@@ -5,6 +5,7 @@
     "roles": {
         "moderatorRole": "",
         "mutedRole": "",
+        "deadRole": "",
         "guestRole": ""
     },
     "channels": {

@@ -1,5 +1,6 @@
 const { Command } = require('@sapphire/framework');
 const { Time } = require('@sapphire/time-utilities');
+const random = require('random');
 const commonMessages = require('../../utilities/commonMessages');
 
 class StealCommand extends Command {
@@ -35,7 +36,7 @@ class StealCommand extends Command {
             return message.channel.send('How would you even steal from yourself? Go buy ice cream? That\'s stupid.');
         }
 
-        const selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+        let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
 
         if (!selfFagBucks) {
             await message.client.FagBucks.create({
@@ -43,6 +44,7 @@ class StealCommand extends Command {
                 amount: 100
             });
 
+            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
             // return message.channel.send('You\'re not even in debt! You just received your complementary **100 💵 FagBucks** cause you\'re new! Now SKIDDADDLE!!!');
         }
 
@@ -52,7 +54,7 @@ class StealCommand extends Command {
 
         if (!fagBucks) {
             await message.client.FagBucks.create({
-                userId: message.author.id,
+                userId: member.user.id,
                 amount: 100
             });
 
@@ -64,7 +66,7 @@ class StealCommand extends Command {
             return message.channel.send(`${member.user.username} does not have enough **💵 FagBucks** for you to steal!`);
         }
 
-        const randomChance = Math.random() * 100;
+        const randomChance = random.int(0, 100);
 
         if (randomChance <= 1) {
             const allOfIt = fagBucks.amount;
