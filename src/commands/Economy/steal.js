@@ -36,6 +36,12 @@ class StealCommand extends Command {
             return message.channel.send('How would you even steal from yourself? Go buy ice cream? That\'s stupid.');
         }
 
+        const { count, rows } = await message.client.FagBucks.findAndCountAll({ order: [['amount', 'DESC']] });
+
+        if (count > 0) {
+            if (message.author.id === rows[0].userId) return message.channel.send('You\'re already at the top! YOU WON CAPITALISM. **WHAT ELSE DO YOU WANT.**');
+        }
+
         let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
 
         if (!selfFagBucks) {
@@ -45,10 +51,7 @@ class StealCommand extends Command {
             });
 
             selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-            // return message.channel.send('You\'re not even in debt! You just received your complementary **100 💵 FagBucks** cause you\'re new! Now SKIDDADDLE!!!');
         }
-
-        // if (selfFagBucks.amount > 50) return message.channel.send(`You still have **${selfFagBucks.amount} 💵 FagBucks**. Come back when you\'re ACTUALLY broke.`);
 
         let fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
 
@@ -61,7 +64,7 @@ class StealCommand extends Command {
             fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
         }
 
-        if (fagBucks.amount < 250) {
+        if (fagBucks.amount < 500) {
             await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             return message.channel.send(`${member.user.username} does not have enough **💵 FagBucks** for you to steal!`);
         }
@@ -73,16 +76,16 @@ class StealCommand extends Command {
             await fagBucks.update({ amount: fagBucks.amount - allOfIt });
             await selfFagBucks.update({ amount: selfFagBucks.amount + allOfIt });
             return message.channel.send(`You tried pickpocketing ${member.user.username} and STOLE ALL OF THEIR MONEY! **${allOfIt} 💵 FagBucks**!`);
-        } else if (randomChance <= 15) {
+        } else if (randomChance <= 25) {
             await fagBucks.update({ amount: fagBucks.amount - 250 });
             await selfFagBucks.update({ amount: selfFagBucks.amount + 250 });
             return message.channel.send(`You tried pickpocketing ${member.user.username} and gained **250 💵 FagBucks**!`);
-        } else if (randomChance <= 25) {
+        } else if (randomChance <= 50) {
             await fagBucks.update({ amount: fagBucks.amount - 100 });
             await selfFagBucks.update({ amount: selfFagBucks.amount + 100 });
             return message.channel.send(`You tried pickpocketing ${member.user.username} and gained **100 💵 FagBucks**!`);
         } else {
-            return message.channel.send(`You tried pickpocketing ${member.user.username} but failed! Now they're looking at you with a thousand yard stare.`);
+            return message.channel.send(`You tried pickpocketing ${member.user.username} but failed!`);
         }
     }
 }

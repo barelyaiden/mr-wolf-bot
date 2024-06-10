@@ -1,3 +1,15 @@
+## [1.1.7] - 2024-06-10
+
+### Added
+
+- The `!luck` command
+
+### Changed
+
+- Improved the `!help` command, it now uses pages listing command names with their descriptions which looks nicer on mobile and is more functional
+- The `!daily` command's cooldown has been lowered to 12 hours from 1 day
+- You can no longer steal if you're at the top of the leaderboard
+
 ## [1.1.6] - 2024-06-09
 
 ### Added

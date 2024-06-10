@@ -7,7 +7,7 @@ class DailyCommand extends Command {
             ...options,
             name: 'daily',
             description: 'Get your daily allowance!',
-            cooldownDelay: Time.Day
+            cooldownDelay: Time.Hour * 12
         });
     }
 
