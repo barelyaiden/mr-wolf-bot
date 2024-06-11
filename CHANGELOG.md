@@ -1,3 +1,9 @@
+## [1.1.8] - 2024-06-11
+
+### Changed
+
+- The cash limit for the `!flip` command has been raised to 1000
+
 ## [1.1.7] - 2024-06-10
 
 ### Added

@@ -37,7 +37,7 @@ class FlipCommand extends Command {
 
         if (!choice || !choices.includes(choice) || !amount || isNaN(amount) || amount < 0) return message.channel.send(`**[🪙]** ${botChoice}!`);
         if (amount % 1 != 0) return message.channel.send('You can only input whole numbers!');
-        if (amount > 500) return message.channel.send('You can only gamble up to a maximum of **500 💵 FagBucks**!');
+        if (amount > 1000) return message.channel.send('You can only gamble up to a maximum of **1000 💵 FagBucks**!');
 
         let fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
 
