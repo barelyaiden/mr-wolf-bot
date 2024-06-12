@@ -20,7 +20,15 @@ class FurryTestCommand extends Command {
         const furryPercentage = random.int(0, 100);
 
         if (member && member.user.id === message.client.user.id) {
-            return message.channel.send('What do you think big shot?');
+            const responses = [
+                'What do you think big shot?',
+                'How is this even a question you\'re asking?',
+                'Are you being intentionally dense?',
+                'There\'s no way you\'re this oblivious.',
+                'Clearly you haven\'t been on Twitter yet.',
+                'Maybe.'
+            ];
+            return message.channel.send(responses[random.int(0, responses.length - 1)]);
         }
 
         let msg;

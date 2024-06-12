@@ -1,4 +1,5 @@
 const { Command } = require('@sapphire/framework');
+const random = require('random');
 const commonMessages = require('../../utilities/commonMessages');
 
 class GiveCommand extends Command {
@@ -7,7 +8,7 @@ class GiveCommand extends Command {
             ...options,
             name: 'give',
             aliases: ['pay'],
-            description: 'Give someone else some of your hard earned cash!',
+            description: 'Give someone else some of your hard earned money!',
             detailedDescription: {
                 usage: '[member] [amount]',
                 example: '@tannaers 100'
@@ -22,11 +23,25 @@ class GiveCommand extends Command {
         if (amount % 1 != 0) return message.channel.send('You can only input whole numbers!');
 
         if (member.user.id === message.client.user.id) {
-            return message.channel.send('You wanna give me money? THAT\'S MY MONEY!!!');
+            const responses = [
+                'You wanna give me money? THAT\'S MY MONEY!!!',
+                'I don\'t need your pity money.',
+                'I have more money than you can IMAGINE.',
+                'Ask the gang they count the vault money.',
+                'I tell you elsewhere go check there ¯\\_(ツ)_/¯',
+                'Let\'s just say I have more than a certain billionaire. Probably. I suck at counting.'
+            ];
+            return message.channel.send(responses[random.int(0, responses.length - 1)]);
         } else if (member.user.bot) {
-            return message.channel.send('Why would you wanna give a computer program money?');
-        } else if (member.user.id === message.author.id) {
-            return message.channel.send(`You just handed yourself **${amount} 💵 FagBucks**! Fascinating! Now you have exactly the same amount you had before.`);
+            const responses = [
+                'Why would you wanna give a computer program money?',
+                'Well I don\'t let them in anyway so they have ZERO!!!',
+                'As I said a million times, I don\'t let them have bank accounts here.',
+                'ZERO. NULL. NONE. UNDEFINED.',
+                'Fine let me check the back, I\'ll be back in 10 years.',
+                'I\'ll give them **0 💵 FagBucks**, just for you!'
+            ];
+            return message.channel.send(responses[random.int(0, responses.length - 1)]);
         }
 
         const selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
@@ -34,20 +49,26 @@ class GiveCommand extends Command {
         if (!selfFagBucks) {
             await message.client.FagBucks.create({
                 userId: message.author.id,
-                amount: 100
+                amount: 100,
+                bank: 0
             });
 
             selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
         }
 
-        if (amount > selfFagBucks.amount) return message.channel.send(`You only have **${selfFagBucks.amount} 💵 FagBucks**!`);
+        if (amount > selfFagBucks.amount) return message.channel.send(`You only have **${selfFagBucks.amount.toLocaleString('en-US')} 💵 FagBucks**!`);
+
+        if (member.user.id === message.author.id) {
+            return message.channel.send(`You just handed yourself **${amount.toLocaleString('en-US')} 💵 FagBucks**! Fascinating! Now you have exactly the same amount you had before.`);
+        }
 
         let fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
 
         if (!fagBucks) {
             await message.client.FagBucks.create({
                 userId: member.user.id,
-                amount: 100
+                amount: 100,
+                bank: 0
             });
 
             fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
@@ -55,7 +76,7 @@ class GiveCommand extends Command {
 
         await fagBucks.update({ amount: fagBucks.amount + amount });
         await selfFagBucks.update({ amount: selfFagBucks.amount - amount });
-        return message.channel.send(`Successfully gave ${member.user.username} **${amount} 💵 FagBucks**!`);
+        return message.channel.send(`Successfully gave ${member.user.username} **${amount.toLocaleString('en-US')} 💵 FagBucks**!`);
     }
 }
 

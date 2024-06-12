@@ -18,7 +18,7 @@ class RNGCommand extends Command {
         const firstNumber = await args.pick('number').catch(() => 1);
         const secondNumber = await args.pick('number').catch(() => firstNumber + 99);
         if (firstNumber % 1 != 0 || secondNumber % 1 != 0) return message.channel.send('You can only input whole numbers!');
-        return message.channel.send(`**[🎲]** ${random.int(firstNumber, secondNumber)}`);
+        return message.channel.send(`**[🎲]** ${(random.int(firstNumber, secondNumber)).toLocaleString('en-US')}`);
     }
 }
 

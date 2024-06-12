@@ -37,15 +37,16 @@ class RpsCommand extends Command {
         const objects = ['Rock', 'Paper', 'Scissors'];
         const botChoice = objects[random.int(0, objects.length - 1)];
 
-        let fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+        let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
 
-        if (!fagBucks) {
+        if (!selfFagBucks) {
             await message.client.FagBucks.create({
                 userId: message.author.id,
-                amount: 100
+                amount: 100,
+                bank: 0
             });
 
-            fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
         }
 
         const randomChance = random.int(0, 100);
@@ -63,7 +64,7 @@ class RpsCommand extends Command {
             if (mapChoice[choice] === 'Rock') {
                 return message.channel.send(`**[🪨]** Draw! You both chose **${botChoice}**!`);
             } else if (mapChoice[choice] === 'Paper') {
-                await fagBucks.update({ amount: fagBucks.amount + winAmount });
+                await selfFagBucks.update({ amount: selfFagBucks.amount + winAmount });
                 return message.channel.send(`**[🪨]** You won! The bot chose **${botChoice}**!\n**You win ${winAmount} 💵 FagBucks!**`);
             } else if (mapChoice[choice] === 'Scissors') {
                 return message.channel.send(`**[🪨]** You lost! The bot chose **${botChoice}**!`);
@@ -74,12 +75,12 @@ class RpsCommand extends Command {
             } else if (mapChoice[choice] === 'Paper') {
                 return message.channel.send(`**[📃]** Draw! You both chose **${botChoice}**!`);
             } else if (mapChoice[choice] === 'Scissors') {
-                await fagBucks.update({ amount: fagBucks.amount + winAmount });
+                await selfFagBucks.update({ amount: selfFagBucks.amount + winAmount });
                 return message.channel.send(`**[📃]** You won! The bot chose **${botChoice}**!\n**You win ${winAmount} 💵 FagBucks!**`);
             }
         } else if (botChoice === 'Scissors') {
             if (mapChoice[choice] === 'Rock') {
-                await fagBucks.update({ amount: fagBucks.amount + winAmount });
+                await selfFagBucks.update({ amount: selfFagBucks.amount + winAmount });
                 return message.channel.send(`**[✂️]** You won! The bot chose **${botChoice}**!\n**You win ${winAmount} 💵 FagBucks!**`);
             } else if (mapChoice[choice] === 'Paper') {
                 return message.channel.send(`**[✂️]** You lost! The bot chose **${botChoice}**!`);

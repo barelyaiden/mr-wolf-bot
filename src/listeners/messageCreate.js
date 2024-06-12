@@ -15,18 +15,19 @@ class MessageCreateListener extends Listener {
         const randomChance = random.int(0, 100);
 
         if (randomChance <= 15) {
-            let fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+            let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
 
-            if (!fagBucks) {
+            if (!selfFagBucks) {
                 await message.client.FagBucks.create({
                     userId: message.author.id,
-                    amount: 100
+                    amount: 100,
+                    bank: 0
                 });
 
-                fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+                selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
             }
 
-            await fagBucks.update({ amount: fagBucks.amount + 10 });
+            await selfFagBucks.update({ amount: selfFagBucks.amount + 10 });
         }
     }
 }

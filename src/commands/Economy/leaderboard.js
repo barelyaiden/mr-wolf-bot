@@ -81,7 +81,7 @@ class LeaderboardCommand extends Command {
 
             const topSpenders = current.map(spender => {
                 b += 1;
-                return `${b}. ${message.guild.members.cache.get(spender.userId)} - 💵 ${spender.amount}`;
+                return `${b}. ${message.guild.members.cache.get(spender.userId)} - 💵 ${spender.amount.toLocaleString('en-US')}`;
             }).join('\n');
 
             const leaderboardEmbed = new EmbedBuilder()

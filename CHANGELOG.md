@@ -1,3 +1,20 @@
+## [1.1.9] - 2024-06-12
+
+### Added
+
+- The `!deposit`, `!withdraw` and `!bank` commands
+
+### Changed
+
+- You now only steal half of someone else's money if you get the 1% chance on the `!steal` command
+- Fixed the 1% chance triggering if the generated random number is 0
+- Numbers are now properly formatted
+- Improved the response from the `!temp`, `!choose` and `!ping` commands
+- More reponses have been added to commands
+- You can now retrieve the banner of bots since that functionality has been added to the Discord API
+- Fixed a couple of inconsistencies in strings and variable names
+- The database tables are now synced asynchronously
+
 ## [1.1.8] - 2024-06-11
 
 ### Changed

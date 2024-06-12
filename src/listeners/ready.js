@@ -9,11 +9,11 @@ class ReadyListener extends Listener {
         });
     }
 
-    run(client) {
-        client.MutedMembers.sync();
-        client.TimeZones.sync();
-        client.FagBucks.sync();
-        client.DeadMembers.sync();
+    async run(client) {
+        await client.MutedMembers.sync();
+        await client.TimeZones.sync();
+        await client.FagBucks.sync();
+        await client.DeadMembers.sync();
         const { username, id } = client.user;
         this.container.logger.info(`Successfully logged in as ${username} (${id})!`);
     }

@@ -28,7 +28,6 @@ class BannerCommand extends Command {
             fetchedMember = await member.user.fetch();
             msg = `${member.user.username}${(member.user.username.endsWith('s')) ? '\'' : '\'s'} Banner:`;
             avatar = member.displayAvatarURL({ dynamic: true });
-            if (member.user.id === message.client.user.id) return message.channel.send('I don\'t have a banner!');
             if (!fetchedMember.bannerURL()) return message.channel.send('That member does not have a banner.');
         }
 

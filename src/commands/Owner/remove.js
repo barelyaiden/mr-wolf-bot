@@ -8,10 +8,10 @@ class RemoveCommand extends Command {
         super(context, {
             ...options,
             name: 'remove',
-            description: 'Artificially remove cash from someone\'s balance.',
+            description: 'Artificially remove money from someone\'s balance.',
             detailedDescription: {
-                usage: '[member]',
-                example: '@zman4302'
+                usage: '[member] [amount]',
+                example: '@zman4302 1000'
             },
             preconditions: ['OwnerOnly']
         });
@@ -30,7 +30,8 @@ class RemoveCommand extends Command {
         if (!fagBucks) {
             await message.client.FagBucks.create({
                 userId: member.user.id,
-                amount: 100
+                amount: 100,
+                bank: 0
             });
 
             fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
@@ -46,7 +47,7 @@ class RemoveCommand extends Command {
             .addFields(
                 { name: 'Member:', value: `${member}`, inline: true },
                 { name: 'Moderator:', value: `${message.author}`, inline: true },
-                { name: 'Amount:', value: `-${amount}` }
+                { name: 'Amount:', value: `-${amount.toLocaleString('en-US')}` }
             )
             .setFooter({ text: `ID: ${member.user.id}` })
             .setTimestamp();
@@ -54,9 +55,9 @@ class RemoveCommand extends Command {
         await logsChannel.send({ embeds: [logEmbed] });
 
         if (member.user.id === message.author.id) {
-            return message.channel.send(`Successfully removed **${amount} 💵 FagBucks** from your balance.`);
+            return message.channel.send(`Successfully removed **${amount.toLocaleString('en-US')} 💵 FagBucks** from your balance.`);
         } else {
-            return message.channel.send(`Successfully removed **${amount} 💵 FagBucks** from ${member.user.username}${(member.user.username.endsWith('s')) ? '\'' : '\'s'} balance.`);
+            return message.channel.send(`Successfully removed **${amount.toLocaleString('en-US')} 💵 FagBucks** from ${member.user.username}${(member.user.username.endsWith('s')) ? '\'' : '\'s'} balance.`);
         }
     }
 }

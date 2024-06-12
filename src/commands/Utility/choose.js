@@ -19,7 +19,7 @@ class ChooseCommand extends Command {
         const input = await args.rest('string').catch(() => null);
         if (!input) return commonMessages.sendUsageEmbed(this, message, args);
         const items = input.split(', ');
-        if (items.length < 2) return message.channel.send(`I choose the only possible option: **${items[0]}**`);
+        if (items.length < 2) return message.channel.send(`**[🤔]** I choose the only possible option: **${items[0]}**`);
         return message.channel.send(`**[🤔]** ${items[random.int(0, items.length - 1)]}`);
     }
 }

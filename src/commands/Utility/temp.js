@@ -27,7 +27,7 @@ class TempsCommand extends Command {
             convertedTemperature = `${temperature.slice(0, -1)}°F is **${((temperature.slice(0, -1) - 32) * 5/9).toFixed(1)}°C**!`;
         }
 
-        return message.channel.send(convertedTemperature);
+        return message.channel.send(`**[🌡️]** ${convertedTemperature}`);
     }
 }
 

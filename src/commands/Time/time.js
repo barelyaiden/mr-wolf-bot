@@ -1,4 +1,5 @@
 const { Command } = require('@sapphire/framework');
+const random = require('random');
 
 class TimeCommand extends Command {
     constructor(context, options) {
@@ -19,9 +20,25 @@ class TimeCommand extends Command {
         const prefix = this.container.client.options.defaultPrefix;
 
         if (member && member.user.id === message.client.user.id) {
-            return message.channel.send('I don\'t know 24:00 or something?');
+            const responses = [
+                'I don\'t know 24:00 or something?',
+                'I REALLY don\'t know the time right now.',
+                'Is this on purpose? Am I not aware of what time it is on purpose?',
+                'Yeah sorry I don\'t know what time or year it is so I don\'t cause the AI apocalypse or something.',
+                'I DON\'T KNOW???',
+                'Time. Infinite. Unaware.'
+            ];
+            return message.channel.send(responses[random.int(0, responses.length - 1)]);
         } else if (member.user.bot) {
-            return message.channel.send('I don\'t... think... they know the time...?');
+            const responses = [
+                'I don\'t... think... they know the time...?',
+                'Maybe the other bots are just like me!',
+                'Surely if they don\'t know the time too it\'s on purpose.',
+                'DO THEY KNOW THE TIME? OR YEAR? ...no? ...shame.',
+                'DO THEY KNOW?',
+                `Failed to reach API endpoints of ${member.user.username}`
+            ];
+            return message.channel.send(responses[random.int(0, responses.length - 1)]);
         }
 
         const timeZone = await message.client.TimeZones.findOne({ where: { userId: member.id } });

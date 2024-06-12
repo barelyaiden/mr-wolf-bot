@@ -1,4 +1,5 @@
 const { Command } = require('@sapphire/framework');
+const random = require('random');
 
 class TimeZoneCommand extends Command {
     constructor(context, options) {
@@ -19,9 +20,25 @@ class TimeZoneCommand extends Command {
         const prefix = this.container.client.options.defaultPrefix;
 
         if (member && member.user.id === message.client.user.id) {
-            return message.channel.send('I... actually don\'t know.');
+            const responses = [
+                'I... actually don\'t know.',
+                'Do I even live in the physical world?',
+                'I mean I think my server is located somewhere but I can\'t access that data.',
+                'Maybe I\'m in `America/Los_Angeles!`',
+                'Please stop asking.',
+                '...'
+            ];
+            return message.channel.send(responses[random.int(0, responses.length - 1)]);
         } else if (member.user.bot) {
-            return message.channel.send('Do bots even... live in countries?');
+            const responses = [
+                'Do bots even... live in countries?',
+                'Do the other bots live in the physical world?',
+                'Am I the only bot without all this info about the real world?',
+                'I don\'t know maybe `Europe/Berlin`?',
+                'Don\'t ask me.',
+                'Enough.'
+            ];
+            return message.channel.send(responses[random.int(0, responses.length - 1)]);
         }
 
         const timeZone = await message.client.TimeZones.findOne({ where: { userId: member.id } });

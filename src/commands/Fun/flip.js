@@ -37,20 +37,21 @@ class FlipCommand extends Command {
 
         if (!choice || !choices.includes(choice) || !amount || isNaN(amount) || amount < 0) return message.channel.send(`**[🪙]** ${botChoice}!`);
         if (amount % 1 != 0) return message.channel.send('You can only input whole numbers!');
-        if (amount > 1000) return message.channel.send('You can only gamble up to a maximum of **1000 💵 FagBucks**!');
+        if (amount > 1000) return message.channel.send('You can only gamble up to a maximum of **1,000 💵 FagBucks**!');
 
-        let fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+        let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
 
-        if (!fagBucks) {
+        if (!selfFagBucks) {
             await message.client.FagBucks.create({
                 userId: message.author.id,
-                amount: 100
+                amount: 100,
+                bank: 0
             });
 
-            fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
         }
 
-        if (amount > fagBucks.amount) return message.channel.send(`You only have **${fagBucks.amount} 💵 FagBucks**!`);
+        if (amount > selfFagBucks.amount) return message.channel.send(`You only have **${selfFagBucks.amount.toLocaleString('en-US')} 💵 FagBucks**!`);
 
         const randomChance = random.int(0, 100);
         let multiplier = 2;
@@ -62,11 +63,11 @@ class FlipCommand extends Command {
         }
 
         if (mapChoice[choice] === botChoice) {
-            await fagBucks.update({ amount: (fagBucks.amount - amount) + (amount * multiplier) });
-            return message.channel.send(`**[🪙]** ${botChoice}!\n**You gained ${(amount * multiplier) - amount} 💵 FagBucks!**`);
+            await selfFagBucks.update({ amount: (selfFagBucks.amount - amount) + (amount * multiplier) });
+            return message.channel.send(`**[🪙]** ${botChoice}!\n**You gained ${((amount * multiplier) - amount).toLocaleString('en-US')} 💵 FagBucks!**`);
         } else {
-            await fagBucks.update({ amount: fagBucks.amount - amount });
-            return message.channel.send(`**[🪙]** ${botChoice}!\n**You lost ${amount} 💵 FagBucks!**`);
+            await selfFagBucks.update({ amount: selfFagBucks.amount - amount });
+            return message.channel.send(`**[🪙]** ${botChoice}!\n**You lost ${amount.toLocaleString('en-US')} 💵 FagBucks!**`);
         }
     }
 }

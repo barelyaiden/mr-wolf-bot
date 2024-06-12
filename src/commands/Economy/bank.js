@@ -1,13 +1,11 @@
 const { Command } = require('@sapphire/framework');
-const { Time } = require('@sapphire/time-utilities');
 
-class DailyCommand extends Command {
+class BankCommand extends Command {
     constructor(context, options) {
         super(context, {
             ...options,
-            name: 'daily',
-            description: 'Get your daily allowance!',
-            cooldownDelay: Time.Hour * 12
+            name: 'bank',
+            description: 'Check your bank account balance!'
         });
     }
 
@@ -24,11 +22,10 @@ class DailyCommand extends Command {
             selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
         }
 
-        await selfFagBucks.update({ amount: selfFagBucks.amount + 100 });
-        return message.channel.send('You have claimed your daily allowance of **100 💵 FagBucks**!');
+        return message.channel.send(`You have **${selfFagBucks.bank.toLocaleString('en-US')} 💵 FagBucks** in your bank account!`);
     }
 }
 
 module.exports = {
-    DailyCommand
+    BankCommand
 };

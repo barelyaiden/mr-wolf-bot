@@ -50,6 +50,10 @@ client.FagBucks = sequelize.define('fagBucks', {
     amount: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    bank: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 });
 

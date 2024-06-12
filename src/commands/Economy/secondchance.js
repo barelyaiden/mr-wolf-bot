@@ -18,24 +18,25 @@ class SecondChanceCommand extends Command {
         let loan = 100;
         if (randomChance <= 5) loan = 500;
 
-        let fagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+        let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
 
-        if (!fagBucks) {
+        if (!selfFagBucks) {
             await message.client.FagBucks.create({
                 userId: message.author.id,
-                amount: 100
+                amount: 100,
+                bank: 0
             });
 
             await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             return message.channel.send(`You have received your starting amount of **100 💵 FagBucks** since you're new!\nNo second chance needed... for now...`);
         }
 
-        if (fagBucks.amount !== 0) {
+        if (selfFagBucks.amount !== 0) {
             await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
-            return message.channel.send(`You already have **${fagBucks.amount} 💵 FagBucks**!`);
+            return message.channel.send(`You already have **${selfFagBucks.amount.toLocaleString('en-US')} 💵 FagBucks**!`);
         }
 
-        await fagBucks.update({ amount: loan });
+        await selfFagBucks.update({ amount: selfFagBucks.amount + loan });
         return message.channel.send(`You have been given a second chance... at gambling!\n**You have received ${loan} 💵 FagBucks!**`);
     }
 }

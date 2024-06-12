@@ -8,10 +8,10 @@ class AddCommand extends Command {
         super(context, {
             ...options,
             name: 'add',
-            description: 'Artificially add to someone\'s balance.',
+            description: 'Artificially add money to someone\'s balance.',
             detailedDescription: {
-                usage: '[member]',
-                example: '@markuwus'
+                usage: '[member] [amount]',
+                example: '@markuwus 100'
             },
             preconditions: ['OwnerOnly']
         });
@@ -30,7 +30,8 @@ class AddCommand extends Command {
         if (!fagBucks) {
             await message.client.FagBucks.create({
                 userId: member.user.id,
-                amount: 100
+                amount: 100,
+                bank: 0
             });
 
             fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
@@ -46,7 +47,7 @@ class AddCommand extends Command {
             .addFields(
                 { name: 'Member:', value: `${member}`, inline: true },
                 { name: 'Moderator:', value: `${message.author}`, inline: true },
-                { name: 'Amount:', value: `+${amount}` }
+                { name: 'Amount:', value: `+${amount.toLocaleString('en-US')}` }
             )
             .setFooter({ text: `ID: ${member.user.id}` })
             .setTimestamp();
@@ -54,9 +55,9 @@ class AddCommand extends Command {
         await logsChannel.send({ embeds: [logEmbed] });
 
         if (member.user.id === message.author.id) {
-            return message.channel.send(`Successfully added **${amount} 💵 FagBucks** to your balance.`);
+            return message.channel.send(`Successfully added **${amount.toLocaleString('en-US')} 💵 FagBucks** to your balance.`);
         } else {
-            return message.channel.send(`Successfully added **${amount} 💵 FagBucks** to ${member.user.username}${(member.user.username.endsWith('s')) ? '\'' : '\'s'} balance.`);
+            return message.channel.send(`Successfully added **${amount.toLocaleString('en-US')} 💵 FagBucks** to ${member.user.username}${(member.user.username.endsWith('s')) ? '\'' : '\'s'} balance.`);
         }
     }
 }
