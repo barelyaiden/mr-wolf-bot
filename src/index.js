@@ -15,13 +15,13 @@ const client = new SapphireClient({
     }
 });
 
-const sequelize = new Sequelize({
+client.sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: 'databases/database.sqlite',
     logging: false
 });
 
-client.MutedMembers = sequelize.define('mutedMembers', {
+client.MutedMembers = client.sequelize.define('mutedMembers', {
     userId: {
         type: DataTypes.STRING,
         unique: true,
@@ -29,7 +29,7 @@ client.MutedMembers = sequelize.define('mutedMembers', {
     }
 });
 
-client.TimeZones = sequelize.define('timeZones', {
+client.TimeZones = client.sequelize.define('timeZones', {
     userId: {
         type: DataTypes.STRING,
         unique: true,
@@ -41,7 +41,7 @@ client.TimeZones = sequelize.define('timeZones', {
     }
 });
 
-client.FagBucks = sequelize.define('fagBucks', {
+client.FagBucks = client.sequelize.define('fagBucks', {
     userId: {
         type: DataTypes.STRING,
         unique: true,
@@ -57,7 +57,7 @@ client.FagBucks = sequelize.define('fagBucks', {
     }
 });
 
-client.DeadMembers = sequelize.define('deadMembers', {
+client.DeadMembers = client.sequelize.define('deadMembers', {
     userId: {
         type: DataTypes.STRING,
         unique: true,

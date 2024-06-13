@@ -5,7 +5,6 @@ class ReplyCommand extends Command {
         super(context, {
             ...options,
             name: 'reply',
-            aliases: ['r'],
             description: 'Make the bot reply to someone.',
             detailedDescription: {
                 usage: '[message id] [message]',

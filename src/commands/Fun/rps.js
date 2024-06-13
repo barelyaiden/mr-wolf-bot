@@ -50,14 +50,14 @@ class RpsCommand extends Command {
         }
 
         const randomChance = random.int(0, 100);
-        let winAmount = 15;
+        let winAmount = 50;
 
         if (randomChance <= 5) {
-            winAmount = 90;
+            winAmount = 500;
         } else if (randomChance <= 15) {
-            winAmount = 60;
+            winAmount = 250;
         } else if (randomChance <= 30) {
-            winAmount = 30;
+            winAmount = 100;
         }
 
         if (botChoice === 'Rock') {

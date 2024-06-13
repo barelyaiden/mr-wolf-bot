@@ -1,6 +1,6 @@
 {
   "name": "mr-wolf-bot",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "Hey, you! Get over here...",
   "main": "src/index.js",
   "scripts": {

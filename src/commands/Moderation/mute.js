@@ -27,7 +27,7 @@ class MuteCommand extends Command {
         let reason = args.finished ? 'No reason ¯\\_(ツ)_/¯' : await args.rest('string');
 
         if (!member) return commonMessages.sendUsageEmbed(this, message, args);
-        if (member.id === message.client.user.id) return message.channel.send('You can\'t silence me!');
+        if (member.id === message.client.user.id) return message.channel.send('Can\'t mute me!');
         if (member.roles.cache.some(role => role.name === roles.moderatorRole)) return message.channel.send('Can\'t mute moderators!');
         if (member.roles.cache.some(role => role.name === roles.mutedRole)) return message.channel.send('That member is already muted.');
 

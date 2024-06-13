@@ -17,7 +17,8 @@ class LeaderboardCommand extends Command {
                 new ButtonBuilder()
                     .setCustomId('left')
                     .setStyle(ButtonStyle.Primary)
-                    .setEmoji('⬅️'),
+                    .setEmoji('⬅️')
+                    .setDisabled(true),
                 new ButtonBuilder()
                     .setCustomId('right')
                     .setStyle(ButtonStyle.Primary)
@@ -58,13 +59,21 @@ class LeaderboardCommand extends Command {
             if (i.customId === 'left') {
                 if (currentPage !== 0) {
                     --currentPage;
-                    await i.update({ embeds: [embeds[currentPage]] });
+                    if (currentPage === 0) {
+                        row.components[0].setDisabled(true);
+                    }
+                    row.components[1].setDisabled(false);
+                    await i.update({ embeds: [embeds[currentPage]], components: [row] });
                 }
             } else if (i.customId === 'right') {
                 if (currentPage < embeds.length-1) {
                     currentPage++;
+                    if (currentPage === embeds.length-1) {
+                        row.components[1].setDisabled(true);
+                    }
+                    row.components[0].setDisabled(false);
                     embeds[currentPage].setFooter({ text: `Page: ${currentPage+1}/${embeds.length}` });
-                    await i.update({ embeds: [embeds[currentPage]] });
+                    await i.update({ embeds: [embeds[currentPage]], components: [row] });
                 }
             }
         });

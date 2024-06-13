@@ -1,6 +1,7 @@
 const { Command } = require('@sapphire/framework');
 const random = require('random');
 const commonMessages = require('../../utilities/commonMessages');
+const typeCheckers = require('../../utilities/typeCheckers');
 
 class GiveCommand extends Command {
     constructor(context, options) {
@@ -18,9 +19,15 @@ class GiveCommand extends Command {
 
     async messageRun(message, args) {
         const member = await args.pick('member').catch(() => null);
-        const amount = await args.pick('number').catch(() => null);
-        if (!member || !amount || isNaN(amount) || amount < 0) return commonMessages.sendUsageEmbed(this, message, args);
-        if (amount % 1 != 0) return message.channel.send('You can only input whole numbers!');
+        let amount = await args.pick('string').catch(() => null);
+        if (!member || !amount) return commonMessages.sendUsageEmbed(this, message, args);
+        if (typeCheckers.isFloat(amount)) {
+            amount = parseFloat(amount);
+            if (isNaN(amount) || amount < 0) return commonMessages.sendUsageEmbed(this, message, args);
+            if (amount % 1 != 0) return message.channel.send('You can only input whole numbers!');
+        } else {
+            if (amount.toLowerCase() !== 'all') return commonMessages.sendUsageEmbed(this, message, args);
+        }
 
         if (member.user.id === message.client.user.id) {
             const responses = [
@@ -56,10 +63,14 @@ class GiveCommand extends Command {
             selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
         }
 
-        if (amount > selfFagBucks.amount) return message.channel.send(`You only have **${selfFagBucks.amount.toLocaleString('en-US')} 💵 FagBucks**!`);
+        if (typeCheckers.isFloat(amount) && amount > selfFagBucks.amount) return message.channel.send(`You only have **${selfFagBucks.amount.toLocaleString('en-US')} 💵 FagBucks**!`);
 
         if (member.user.id === message.author.id) {
-            return message.channel.send(`You just handed yourself **${amount.toLocaleString('en-US')} 💵 FagBucks**! Fascinating! Now you have exactly the same amount you had before.`);
+            if (typeCheckers.isFloat(amount)) {
+                return message.channel.send(`You just handed yourself **${amount.toLocaleString('en-US')} 💵 FagBucks**! Fascinating! Now you have exactly the same amount you had before.`);
+            } else if (!typeCheckers.isFloat(amount) && amount.toLowerCase() === 'all') {
+                return message.channel.send(`You just handed yourself all of your **💵 FagBucks**! Incredible! You still have exactly the same amount you had before.`);
+            }
         }
 
         let fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
@@ -74,9 +85,16 @@ class GiveCommand extends Command {
             fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
         }
 
-        await fagBucks.update({ amount: fagBucks.amount + amount });
-        await selfFagBucks.update({ amount: selfFagBucks.amount - amount });
-        return message.channel.send(`Successfully gave ${member.user.username} **${amount.toLocaleString('en-US')} 💵 FagBucks**!`);
+        if (!typeCheckers.isFloat(amount) && amount.toLowerCase() === 'all') {
+            const allOfIt = selfFagBucks.amount;
+            await fagBucks.update({ amount: fagBucks.amount + allOfIt });
+            await selfFagBucks.update({ amount: selfFagBucks.amount - allOfIt });
+            return message.channel.send(`Successfully gave ${member.user.username} **${allOfIt.toLocaleString('en-US')} 💵 FagBucks**!`);
+        } else {
+            await fagBucks.update({ amount: fagBucks.amount + amount });
+            await selfFagBucks.update({ amount: selfFagBucks.amount - amount });
+            return message.channel.send(`Successfully gave ${member.user.username} **${amount.toLocaleString('en-US')} 💵 FagBucks**!`);
+        }
     }
 }
 

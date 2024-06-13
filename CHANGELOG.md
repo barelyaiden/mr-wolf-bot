@@ -1,3 +1,20 @@
+## [1.1.10] - 2024-06-13
+
+### Added
+
+- The `!roulette` and `!heist` commands
+- The `!shutdown` command (owner only)
+
+### Changed
+
+- The `!rps` command has been buffed now giving out 50, 100, 250 and 500 money
+- You may now use the "all" keyword to deposit, withdraw or give all of your money
+- The `!help` command now shows aliases in the command lists
+- Paginated embeds now disable buttons depending on if you're on the first or last page
+- Added aliases to the `!deposit` and `!withdraw` commands
+- Removed aliases from the `!say` and `!reply` commands (owner only)
+- Fixed more inconsistent strings
+
 ## [1.1.9] - 2024-06-12
 
 ### Added

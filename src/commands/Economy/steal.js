@@ -105,11 +105,11 @@ class StealCommand extends Command {
         } else if (randomChance <= 25) {
             await fagBucks.update({ amount: fagBucks.amount - 250 });
             await selfFagBucks.update({ amount: selfFagBucks.amount + 250 });
-            return message.channel.send(`You tried pickpocketing ${member.user.username} and gained **250 💵 FagBucks**!`);
+            return message.channel.send(`You tried pickpocketing ${member.user.username} and stole **250 💵 FagBucks**!`);
         } else if (randomChance <= 50) {
             await fagBucks.update({ amount: fagBucks.amount - 100 });
             await selfFagBucks.update({ amount: selfFagBucks.amount + 100 });
-            return message.channel.send(`You tried pickpocketing ${member.user.username} and gained **100 💵 FagBucks**!`);
+            return message.channel.send(`You tried pickpocketing ${member.user.username} and stole **100 💵 FagBucks**!`);
         } else {
             const responses = [
                 `You tried pickpocketing ${member.user.username} but they turned around and caught you in the act!`,

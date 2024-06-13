@@ -5,7 +5,6 @@ class SayCommand extends Command {
         super(context, {
             ...options,
             name: 'say',
-            aliases: ['s'],
             description: 'Make the bot say something.',
             detailedDescription: {
                 usage: '[message]',

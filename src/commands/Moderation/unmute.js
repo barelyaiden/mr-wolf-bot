@@ -23,7 +23,7 @@ class UnmuteCommand extends Command {
         const member = await args.pick('member').catch(() => null);
 
         if (!member) return commonMessages.sendUsageEmbed(this, message, args);
-        if (member.id === message.client.user.id) return message.channel.send('You can\'t silence me in the first place!');
+        if (member.id === message.client.user.id) return message.channel.send('You can\'t mute me in the first place!');
         if (member.roles.cache.some(role => role.name === roles.moderatorRole)) return message.channel.send('Moderators can\'t be muted!');
         if (!member.roles.cache.some(role => role.name === roles.mutedRole)) return message.channel.send('That member is not muted.');
 
