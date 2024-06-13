@@ -2,6 +2,7 @@
     "token": "",
     "prefix": "",
     "owners": [],
+    "guildId": "",
     "roles": {
         "moderatorRole": "",
         "mutedRole": "",

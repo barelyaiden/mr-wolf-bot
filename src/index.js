@@ -15,6 +15,8 @@ const client = new SapphireClient({
     }
 });
 
+client.initialTimestamp = new Date();
+
 client.sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: 'databases/database.sqlite',

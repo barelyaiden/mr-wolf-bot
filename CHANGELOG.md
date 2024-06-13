@@ -14,6 +14,7 @@
 - Added aliases to the `!deposit` and `!withdraw` commands
 - Removed aliases from the `!say` and `!reply` commands (owner only)
 - Fixed more inconsistent strings
+- The bot now sends a message in the logs channel when it successfully boots up
 
 ## [1.1.9] - 2024-06-12
 
