@@ -1,4 +1,5 @@
 const { Command } = require('@sapphire/framework');
+const { fetchEconomyData } = require('../../utilities/economyFunctions');
 
 class BankCommand extends Command {
     constructor(context, options) {
@@ -10,19 +11,8 @@ class BankCommand extends Command {
     }
 
     async messageRun(message) {
-        let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-
-        if (!selfFagBucks) {
-            await message.client.FagBucks.create({
-                userId: message.author.id,
-                amount: 100,
-                bank: 0
-            });
-
-            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-        }
-
-        return message.channel.send(`You have **${selfFagBucks.bank.toLocaleString('en-US')} 💵 FagBucks** in your bank account!`);
+        const selfMoneys = await fetchEconomyData(message, message.author.id);
+        return message.channel.send(`You have **${selfMoneys.bank.toLocaleString('en-US')} 💵 Moneys** in your bank account!`);
     }
 }
 

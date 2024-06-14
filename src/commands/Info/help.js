@@ -1,5 +1,6 @@
 const { Command } = require('@sapphire/framework');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { embedColor, createBasicEmbed } = require('../../utilities/commonMessages');
 const { owners, roles, categories } = require('../../../config.json');
 
 class HelpCommand extends Command {
@@ -43,53 +44,45 @@ class HelpCommand extends Command {
             const moderationCommands = commands.filter((command) => command.fullCategory[0] === 'Moderation');
             const ownerCommands = commands.filter((command) => command.fullCategory[0] === 'Owner');
 
-            const economyEmbed = this.createEmbed(message, prefix, 'Economy', economyCommands);
-            const funEmbed = this.createEmbed(message, prefix, 'Fun', funCommands);
-            const infoEmbed = this.createEmbed(message, prefix, 'Info', infoCommands);
-            const timeEmbed = this.createEmbed(message, prefix, 'Time', timeCommands);
-            const utilityEmbed = this.createEmbed(message, prefix, 'Utility', utilityCommands);
+            const economyEmbed = this.createEmbed('Economy', message, economyCommands, prefix);
+            const funEmbed = this.createEmbed('Fun', message, funCommands, prefix);
+            const infoEmbed = this.createEmbed('Info', message, infoCommands, prefix);
+            const timeEmbed = this.createEmbed('Time', message, timeCommands, prefix);
+            const utilityEmbed = this.createEmbed('Utility', message, utilityCommands, prefix);
             
             let currentPage = 0;
             const embeds = [economyEmbed, funEmbed, infoEmbed, timeEmbed, utilityEmbed];
 
             if (message.channel.parent.name === categories.moderatorCategory) {
-                const moderationEmbed = this.createEmbed(message, prefix, 'Moderation', moderationCommands);
+                const moderationEmbed = this.createEmbed('Moderation', message, moderationCommands, prefix);
                 embeds.unshift(moderationEmbed);
 
                 if (message.author.id === owners[0]) {
-                    const ownerEmbed = this.createEmbed(message, prefix, 'Owner', ownerCommands);
+                    const ownerEmbed = this.createEmbed('Owner', message, ownerCommands, prefix);
                     embeds.unshift(ownerEmbed);
                 }
             }
 
             embeds[currentPage].setFooter({ text: `Page: ${currentPage+1}/${embeds.length}` });
-
             const msg = await message.channel.send({ embeds: [embeds[currentPage]], components: [row] });
-
             setTimeout(async function() {
                 await msg.edit({ components: [] });
             }, 30000);
 
             const filter = i => i.user.id === message.author.id;
-
             const collector = await message.channel.createMessageComponentCollector({ filter, time: 30000 });
-
             collector.on('collect', async i => {
                 if (i.customId === 'left') {
                     if (currentPage !== 0) {
                         --currentPage;
-                        if (currentPage === 0) {
-                            row.components[0].setDisabled(true);
-                        }
+                        if (currentPage === 0) row.components[0].setDisabled(true);
                         row.components[1].setDisabled(false);
                         await i.update({ embeds: [embeds[currentPage]], components: [row] });
                     }
                 } else if (i.customId === 'right') {
                     if (currentPage < embeds.length-1) {
                         currentPage++;
-                        if (currentPage === embeds.length-1) {
-                            row.components[1].setDisabled(true);
-                        }
+                        if (currentPage === embeds.length-1) row.components[1].setDisabled(true);
                         row.components[0].setDisabled(false);
                         embeds[currentPage].setFooter({ text: `Page: ${currentPage+1}/${embeds.length}` });
                         await i.update({ embeds: [embeds[currentPage]], components: [row] });
@@ -103,14 +96,11 @@ class HelpCommand extends Command {
             if (command.category === 'Secret') return;
             if (command.options.preconditions && command.options.preconditions[0] === 'OwnerOnly' && !owners.includes(message.author.id)) return;
 
-            const commandEmbed = new EmbedBuilder()
-                .setColor(0xfbfbfb)
-                .setAuthor({ name: `Command: ${prefix}${command.name}`, iconURL: message.client.user.displayAvatarURL({ dynamic: true }) })
-                .setDescription(command.description)
-                .addFields(
-                    { name: 'Category:', value: command.category, inline: true }
-                )
-                .setTimestamp();
+            const commandEmbed = createBasicEmbed(`Command: ${prefix}${command.name}`, message.client.user);
+            commandEmbed.setDescription(command.description);
+            commandEmbed.addFields(
+                { name: 'Category:', value: command.category, inline: true }
+            );
 
             if (command.aliases.length !== 0) commandEmbed.addFields({ name: 'Aliases:', value: command.aliases.join(', '), inline: true });
             if (command.detailedDescription.usage) {
@@ -124,9 +114,9 @@ class HelpCommand extends Command {
         }
     }
 
-    createEmbed(message, prefix, author, commands) {
+    createEmbed(author, message, commands, prefix) {
         const embed = new EmbedBuilder()
-            .setColor(0xfbfbfb)
+            .setColor(embedColor)
             .setAuthor({ name: `${author} Commands`, iconURL: message.client.user.displayAvatarURL({ dynamic: true }) })
             .setTimestamp();
 

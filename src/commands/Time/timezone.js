@@ -29,7 +29,7 @@ class TimeZoneCommand extends Command {
                 '...'
             ];
             return message.channel.send(responses[random.int(0, responses.length - 1)]);
-        } else if (member.user.bot) {
+        } else if (member && member.user.bot) {
             const responses = [
                 'Do bots even... live in countries?',
                 'Do the other bots live in the physical world?',
@@ -43,13 +43,13 @@ class TimeZoneCommand extends Command {
 
         const timeZone = await message.client.TimeZones.findOne({ where: { userId: member.id } });
 
-        if (member === message.member) {
+        if (member && member === message.member) {
             if (!timeZone) return message.channel.send(`You did not register your time zone!\nUse the \`${prefix}settimezone\` command to get started.`);
         } else {
             if (!timeZone) return message.channel.send(`That member did not register their time zone!\nTell them to use the \`${prefix}settimezone\` command to get started.`);
         }
 
-        if (member === message.member) {
+        if (member && member === message.member) {
             return message.channel.send(`Your current time zone is: \`${timeZone.timeZone}\``);
         } else {
             return message.channel.send(`${member.user.username}${(member.user.username.endsWith('s')) ? '\'' : '\'s'} current time zone is: \`${timeZone.timeZone}\``);

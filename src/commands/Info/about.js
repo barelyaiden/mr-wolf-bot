@@ -1,8 +1,8 @@
 const { Command } = require('@sapphire/framework');
-const { EmbedBuilder } = require('discord.js');
-const { version, description, author, dependencies } = require('../../../package.json');
 const moment = require('moment');
 require('moment-duration-format');
+const { createBasicEmbed } = require('../../utilities/commonMessages');
+const { version, description, author, dependencies } = require('../../../package.json');
 
 class AboutCommand extends Command {
     constructor(context, options) {
@@ -15,19 +15,15 @@ class AboutCommand extends Command {
     }
 
     async messageRun(message) {
-        const aboutEmbed = new EmbedBuilder()
-            .setColor(0xfbfbfb)
-            .setAuthor({ name: 'About Mr. Wolf Bot', iconURL: message.client.user.displayAvatarURL({ dynamic: true })})
-            .setDescription(description)
-            .addFields(
-                { name: 'Author:', value: author },
-                { name: 'Version:', value: version },
-                { name: 'Library:', value: `discord.js ${dependencies['discord.js'].substring(1)}` },
-                { name: 'Runtime:', value: `Node.js ${process.version.substring(1)}` }
-            )
-            .setFooter({ text: `Uptime: ${moment.duration(message.client.uptime).format('h:mm:ss', { trim: false })}` })
-            .setTimestamp();
-
+        const aboutEmbed = createBasicEmbed('About Mr. Wolf Bot', message.client.user);
+        aboutEmbed.setDescription(description);
+        aboutEmbed.addFields(
+            { name: 'Author:', value: author },
+            { name: 'Version:', value: version },
+            { name: 'Library:', value: `discord.js ${dependencies['discord.js'].substring(1)}` },
+            { name: 'Runtime:', value: `Node.js ${process.version.substring(1)}` }
+        );
+        aboutEmbed.setFooter({ text: `Uptime: ${moment.duration(message.client.uptime).format('h:mm:ss', { trim: false })}` });
         return message.channel.send({ embeds: [aboutEmbed] });
     }
 }

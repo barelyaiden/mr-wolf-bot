@@ -29,7 +29,7 @@ class TimeCommand extends Command {
                 'Time. Infinite. Unaware.'
             ];
             return message.channel.send(responses[random.int(0, responses.length - 1)]);
-        } else if (member.user.bot) {
+        } else if (member && member.user.bot) {
             const responses = [
                 'I don\'t... think... they know the time...?',
                 'Maybe the other bots are just like me!',
@@ -43,7 +43,7 @@ class TimeCommand extends Command {
 
         const timeZone = await message.client.TimeZones.findOne({ where: { userId: member.id } });
 
-        if (member === message.member) {
+        if (member && member === message.member) {
             if (!timeZone) return message.channel.send(`You did not register your time zone!\nUse the \`${prefix}settimezone\` command to get started.`);
         } else {
             if (!timeZone) return message.channel.send(`That member did not register their time zone!\nTell them to use the \`${prefix}settimezone\` command to get started.`);
@@ -81,7 +81,7 @@ class TimeCommand extends Command {
             "23": "🕚",
         };
 
-        if (member === message.member) {
+        if (member && member === message.member) {
             return message.channel.send(`**[${emoji[hours]}]** It is currently \`${hours}:${minutes}\` for you.`);
         } else {
             return message.channel.send(`**[${emoji[hours]}]** It is currently \`${hours}:${minutes}\` for ${member.user.username}.`);

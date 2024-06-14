@@ -1,3 +1,13 @@
+## [1.1.11] - 2024-06-14
+
+### Changed
+
+- Huge refactoring of the codebase
+- Fixed miscellaneous bugs
+- The currency is now called "Moneys"
+- The cooldown resets now if you try to steal or heist if you're at the top of the leaderboard
+- The cooldown of the `!steal` command has been raised from 10 to 30 minutes
+
 ## [1.1.10] - 2024-06-13
 
 ### Added

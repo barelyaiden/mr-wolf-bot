@@ -1,5 +1,6 @@
 const { Command } = require('@sapphire/framework');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { embedColor } = require('../../utilities/commonMessages');
 
 class LeaderboardCommand extends Command {
     constructor(context, options) {
@@ -25,12 +26,12 @@ class LeaderboardCommand extends Command {
                     .setEmoji('➡️'),
             );
 
-        const { count, rows } = await message.client.FagBucks.findAndCountAll({ order: [['amount', 'DESC']] });
+        const { count, rows } = await message.client.Moneys.findAndCountAll({ order: [['amount', 'DESC']] });
 
         const emptyLeaderboardEmbed = new EmbedBuilder()
-            .setColor(0xfbfbfb)
+            .setColor(embedColor)
             .setAuthor({ name: '🏆 Server Leaderboard' })
-            .setDescription('Looks like no one has any **💵 FagBucks** :(')
+            .setDescription('Looks like no one has any **💵 Moneys** :(')
             .setFooter({ text: 'You should really gamble your life savings away and start the economy!' })
             .setTimestamp();
 
@@ -43,34 +44,26 @@ class LeaderboardCommand extends Command {
             return message.channel.send({ embeds: [embeds[currentPage]] });
         } else {
             embeds[currentPage].setFooter({ text: `Page: ${currentPage+1}/${embeds.length}` });
-
             const msg = await message.channel.send({ embeds: [embeds[currentPage]], components: [row] });
-
             setTimeout(async function() {
                 await msg.edit({ components: [] });
             }, 30000);
         }
 
         const filter = i => i.user.id === message.author.id;
-
         const collector = await message.channel.createMessageComponentCollector({ filter, time: 30000 });
-
         collector.on('collect', async i => {
             if (i.customId === 'left') {
                 if (currentPage !== 0) {
                     --currentPage;
-                    if (currentPage === 0) {
-                        row.components[0].setDisabled(true);
-                    }
+                    if (currentPage === 0) row.components[0].setDisabled(true);
                     row.components[1].setDisabled(false);
                     await i.update({ embeds: [embeds[currentPage]], components: [row] });
                 }
             } else if (i.customId === 'right') {
                 if (currentPage < embeds.length-1) {
                     currentPage++;
-                    if (currentPage === embeds.length-1) {
-                        row.components[1].setDisabled(true);
-                    }
+                    if (currentPage === embeds.length-1) row.components[1].setDisabled(true);
                     row.components[0].setDisabled(false);
                     embeds[currentPage].setFooter({ text: `Page: ${currentPage+1}/${embeds.length}` });
                     await i.update({ embeds: [embeds[currentPage]], components: [row] });
@@ -94,7 +87,7 @@ class LeaderboardCommand extends Command {
             }).join('\n');
 
             const leaderboardEmbed = new EmbedBuilder()
-                .setColor(0xfbfbfb)
+                .setColor(embedColor)
                 .setAuthor({ name: '🏆 Server Leaderboard' })
                 .setDescription(topSpenders)
                 .setTimestamp();

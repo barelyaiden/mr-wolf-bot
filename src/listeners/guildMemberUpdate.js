@@ -17,8 +17,7 @@ class GuildMemberUpdateListener extends Listener {
 
         if (oldMember.nickname !== newMember.nickname) {
             const deadMember = await newMember.client.DeadMembers.findOne({ where: { userId: newMember.user.id } });
-            if (!deadMember) return;
-            await newMember.setNickname(deadMember.nickname);
+            if (deadMember) await newMember.setNickname(deadMember.nickname);
         }
     }
 }

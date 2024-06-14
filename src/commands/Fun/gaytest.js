@@ -1,6 +1,6 @@
 const { Command } = require('@sapphire/framework');
-const { owners } = require('../../../config.json');
 const random = require('random');
+const { owners } = require('../../../config.json');
 
 class GayTestCommand extends Command {
     constructor(context, options) {
@@ -30,7 +30,7 @@ class GayTestCommand extends Command {
 
         let msg;
 
-        if (!member || member.user.id === message.author.id) {
+        if (!member || member && member.user.id === message.author.id) {
             msg = `You are **${gayPercentage}%** gay!`;
         } else {
             msg = `${member.user.username} is **${gayPercentage}%** gay!`;

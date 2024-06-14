@@ -43,7 +43,7 @@ client.TimeZones = client.sequelize.define('timeZones', {
     }
 });
 
-client.FagBucks = client.sequelize.define('fagBucks', {
+client.Moneys = client.sequelize.define('moneys', {
     userId: {
         type: DataTypes.STRING,
         unique: true,

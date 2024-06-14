@@ -1,7 +1,8 @@
 const { Command } = require('@sapphire/framework');
 const random = require('random');
-const commonMessages = require('../../utilities/commonMessages');
-const typeCheckers = require('../../utilities/typeCheckers');
+const { sendUsageEmbed } = require('../../utilities/commonMessages');
+const { fetchEconomyData } = require('../../utilities/economyFunctions');
+const { isFloat } = require('../../utilities/typeCheckers');
 
 class GiveCommand extends Command {
     constructor(context, options) {
@@ -20,13 +21,17 @@ class GiveCommand extends Command {
     async messageRun(message, args) {
         const member = await args.pick('member').catch(() => null);
         let amount = await args.pick('string').catch(() => null);
-        if (!member || !amount) return commonMessages.sendUsageEmbed(this, message, args);
-        if (typeCheckers.isFloat(amount)) {
+        if (!member || !amount) return sendUsageEmbed(this, args, message);
+
+        if (isFloat(amount)) {
             amount = parseFloat(amount);
-            if (isNaN(amount) || amount < 0) return commonMessages.sendUsageEmbed(this, message, args);
-            if (amount % 1 != 0) return message.channel.send('You can only input whole numbers!');
+            if (amount < 0) {
+                return message.channel.send('You can only input positive numbers!');
+            } else if (amount % 1 != 0) {
+                return message.channel.send('You can only input whole numbers!');
+            }
         } else {
-            if (amount.toLowerCase() !== 'all') return commonMessages.sendUsageEmbed(this, message, args);
+            if (amount.toLowerCase() !== 'all') return sendUsageEmbed(this, args, message);
         }
 
         if (member.user.id === message.client.user.id) {
@@ -46,54 +51,34 @@ class GiveCommand extends Command {
                 'As I said a million times, I don\'t let them have bank accounts here.',
                 'ZERO. NULL. NONE. UNDEFINED.',
                 'Fine let me check the back, I\'ll be back in 10 years.',
-                'I\'ll give them **0 💵 FagBucks**, just for you!'
+                'I\'ll give them **0 💵 Moneys**, just for you!'
             ];
             return message.channel.send(responses[random.int(0, responses.length - 1)]);
         }
 
-        const selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+        const selfMoneys = await fetchEconomyData(message, message.author.id);
 
-        if (!selfFagBucks) {
-            await message.client.FagBucks.create({
-                userId: message.author.id,
-                amount: 100,
-                bank: 0
-            });
-
-            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-        }
-
-        if (typeCheckers.isFloat(amount) && amount > selfFagBucks.amount) return message.channel.send(`You only have **${selfFagBucks.amount.toLocaleString('en-US')} 💵 FagBucks**!`);
+        if (isFloat(amount) && amount > selfMoneys.amount) return message.channel.send(`You only have **${selfMoneys.amount.toLocaleString('en-US')} 💵 Moneys**!`);
 
         if (member.user.id === message.author.id) {
-            if (typeCheckers.isFloat(amount)) {
-                return message.channel.send(`You just handed yourself **${amount.toLocaleString('en-US')} 💵 FagBucks**! Fascinating! Now you have exactly the same amount you had before.`);
-            } else if (!typeCheckers.isFloat(amount) && amount.toLowerCase() === 'all') {
-                return message.channel.send(`You just handed yourself all of your **💵 FagBucks**! Incredible! You still have exactly the same amount you had before.`);
+            if (isFloat(amount)) {
+                return message.channel.send(`You just handed yourself **${amount.toLocaleString('en-US')} 💵 Moneys**! Fascinating! Now you have exactly the same amount you had before.`);
+            } else if (!isFloat(amount) && amount.toLowerCase() === 'all' || isFloat(amount) && amount === selfMoneys.amount) {
+                return message.channel.send(`You just handed yourself all of your **💵 Moneys**! Incredible! You still have exactly the same amount you had before.`);
             }
         }
 
-        let fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
+        const Moneys = await fetchEconomyData(message, member.user.id);
 
-        if (!fagBucks) {
-            await message.client.FagBucks.create({
-                userId: member.user.id,
-                amount: 100,
-                bank: 0
-            });
-
-            fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
-        }
-
-        if (!typeCheckers.isFloat(amount) && amount.toLowerCase() === 'all') {
-            const allOfIt = selfFagBucks.amount;
-            await fagBucks.update({ amount: fagBucks.amount + allOfIt });
-            await selfFagBucks.update({ amount: selfFagBucks.amount - allOfIt });
-            return message.channel.send(`Successfully gave ${member.user.username} **${allOfIt.toLocaleString('en-US')} 💵 FagBucks**!`);
+        if (!isFloat(amount) && amount.toLowerCase() === 'all') {
+            const allOfIt = selfMoneys.amount;
+            await Moneys.update({ amount: Moneys.amount + allOfIt });
+            await selfMoneys.update({ amount: selfMoneys.amount - allOfIt });
+            return message.channel.send(`Successfully gave ${member.user.username} **${allOfIt.toLocaleString('en-US')} 💵 Moneys**!`);
         } else {
-            await fagBucks.update({ amount: fagBucks.amount + amount });
-            await selfFagBucks.update({ amount: selfFagBucks.amount - amount });
-            return message.channel.send(`Successfully gave ${member.user.username} **${amount.toLocaleString('en-US')} 💵 FagBucks**!`);
+            await Moneys.update({ amount: Moneys.amount + amount });
+            await selfMoneys.update({ amount: selfMoneys.amount - amount });
+            return message.channel.send(`Successfully gave ${member.user.username} **${amount.toLocaleString('en-US')} 💵 Moneys**!`);
         }
     }
 }

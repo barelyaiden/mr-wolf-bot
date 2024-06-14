@@ -1,6 +1,7 @@
 const { Command } = require('@sapphire/framework');
-const commonMessages = require('../../utilities/commonMessages');
-const typeCheckers = require('../../utilities/typeCheckers');
+const { sendUsageEmbed } = require('../../utilities/commonMessages');
+const { fetchEconomyData } = require('../../utilities/economyFunctions');
+const { isFloat } = require('../../utilities/typeCheckers');
 
 class WithdrawCommand extends Command {
     constructor(context, options) {
@@ -18,36 +19,30 @@ class WithdrawCommand extends Command {
 
     async messageRun(message, args) {
         let amount = await args.pick('string').catch(() => null);
-        if (!amount) return commonMessages.sendUsageEmbed(this, message, args);
-        if (typeCheckers.isFloat(amount)) {
+        if (!amount) return sendUsageEmbed(this, args, message);
+
+        if (isFloat(amount)) {
             amount = parseFloat(amount);
-            if (isNaN(amount) || amount < 0) return commonMessages.sendUsageEmbed(this, message, args);
-            if (amount % 1 != 0) return message.channel.send('You can only input whole numbers!');
+            if (amount < 0) {
+                return message.channel.send('You can only input positive numbers!');
+            } else if (amount % 1 != 0) {
+                return message.channel.send('You can only input whole numbers!');
+            }
         } else {
-            if (amount.toLowerCase() !== 'all') return commonMessages.sendUsageEmbed(this, message, args);
+            if (amount.toLowerCase() !== 'all') return sendUsageEmbed(this, args, message);
         }
 
-        const selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+        const selfMoneys = await fetchEconomyData(message, message.author.id);
 
-        if (!selfFagBucks) {
-            await message.client.FagBucks.create({
-                userId: message.author.id,
-                amount: 100,
-                bank: 0
-            });
+        if (isFloat(amount) && amount > selfMoneys.bank) return message.channel.send(`You only have **${selfMoneys.bank.toLocaleString('en-US')} 💵 Moneys** in your bank account!`);
 
-            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-        }
-
-        if (typeCheckers.isFloat(amount) && amount > selfFagBucks.bank) return message.channel.send(`You only have **${selfFagBucks.bank.toLocaleString('en-US')} 💵 FagBucks** in your bank account!`);
-
-        if (!typeCheckers.isFloat(amount) && amount.toLowerCase() === 'all') {
-            const allOfIt = selfFagBucks.bank;
-            await selfFagBucks.update({ amount: selfFagBucks.amount + allOfIt, bank: selfFagBucks.bank - allOfIt });
-            return message.channel.send(`Successfully withdrew **${allOfIt.toLocaleString('en-US')} 💵 FagBucks** from your bank account!`);
+        if (!isFloat(amount) && amount.toLowerCase() === 'all') {
+            const allOfIt = selfMoneys.bank;
+            await selfMoneys.update({ amount: selfMoneys.amount + allOfIt, bank: selfMoneys.bank - allOfIt });
+            return message.channel.send(`Successfully withdrew **${allOfIt.toLocaleString('en-US')} 💵 Moneys** from your bank account!`);
         } else {
-            await selfFagBucks.update({ amount: selfFagBucks.amount + amount, bank: selfFagBucks.bank - amount });
-            return message.channel.send(`Successfully withdrew **${amount.toLocaleString('en-US')} 💵 FagBucks** from your bank account!`);
+            await selfMoneys.update({ amount: selfMoneys.amount + amount, bank: selfMoneys.bank - amount });
+            return message.channel.send(`Successfully withdrew **${amount.toLocaleString('en-US')} 💵 Moneys** from your bank account!`);
         }
     }
 }

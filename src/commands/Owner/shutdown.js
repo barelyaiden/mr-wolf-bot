@@ -11,17 +11,10 @@ class ShutdownCommand extends Command {
     }
 
     async messageRun(message) {
-        this.container.logger.info('Initializing shutdown sequence...');
-        this.container.logger.info('Sending the shutdown message...');
-        const msg = await message.channel.send('**[🔌]** Shutting down...');
-        this.container.logger.info('Sucessfully sent the shutdown message!');
-        this.container.logger.info('Closing the database connection...');
-        await message.client.sequelize.close();
-        this.container.logger.info('Successfully closed the database connection!');
-        this.container.logger.info('Editing the shutdown message...');
-        await msg.edit('**[🔌]** I am now offline!');
-        this.container.logger.info('Successfully edited the shutdown message!');
         this.container.logger.info('Shutting down...');
+        const msg = await message.channel.send('**[🔌]** Shutting down...');
+        await message.client.sequelize.close();
+        await msg.edit('**[🔌]** I am now offline!');
         return message.client.destroy();
     }
 }

@@ -1,7 +1,7 @@
 const { Command } = require('@sapphire/framework');
-const { PermissionsBitField, EmbedBuilder } = require('discord.js');
+const { PermissionsBitField } = require('discord.js');
+const { createBasicEmbed, sendUsageEmbed } = require('../../utilities/commonMessages');
 const { owners, channels } = require('../../../config.json');
-const commonMessages = require('../../utilities/commonMessages');
 
 class UnbanCommand extends Command {
     constructor(context, options) {
@@ -21,25 +21,19 @@ class UnbanCommand extends Command {
     async messageRun(message, args) {
         const userId = await args.pick('string').catch(() => null);
 
-        if (!userId) return commonMessages.sendUsageEmbed(this, message, args);
+        if (!userId) return sendUsageEmbed(this, args, message);
         if (userId === message.client.user.id) return message.channel.send('I can\'t be banned in the first place!');
         if (userId === owners[0]) return message.channel.send('The server owner can\'t be banned in the first place!');
 
         const logsChannel = await message.guild.channels.cache.find(ch => ch.name === channels.logsChannel);
-        
-        const logEmbed = new EmbedBuilder()
-            .setColor(0xfbfbfb)
-            .setAuthor({ name: 'A user was unbanned.', iconURL: message.client.user.displayAvatarURL({ dynamic: true }) })
-            .addFields(
-                { name: 'User ID:', value: userId, inline: true },
-                { name: 'Moderator:', value: `${message.author}`, inline: true },
-            )
-            .setTimestamp();
-        
-        const successEmbed = new EmbedBuilder()
-            .setColor(0xfbfbfb)
-            .setAuthor({ name: `User Id: ${userId} has been unbanned.`, iconURL: message.client.user.displayAvatarURL({ dynamic: true }) })
-            .setTimestamp();
+
+        const logEmbed = createBasicEmbed('A user was unbanned.', message.client.user);
+        logEmbed.addFields(
+            { name: 'User ID:', value: userId, inline: true },
+            { name: 'Moderator:', value: `${message.author}`, inline: true },
+        );
+
+        const successEmbed = createBasicEmbed(`User Id: ${userId} has been unbanned.`, message.client.user);
 
         try {
             await message.guild.members.unban(userId);

@@ -1,7 +1,7 @@
 const { Command } = require('@sapphire/framework');
-const { PermissionsBitField, EmbedBuilder } = require('discord.js');
+const { PermissionsBitField } = require('discord.js');
+const { createBasicEmbed, sendUsageEmbed } = require('../../utilities/commonMessages');
 const { roles, channels } = require('../../../config.json');
-const commonMessages = require('../../utilities/commonMessages');
 
 class UnmuteCommand extends Command {
     constructor(context, options) {
@@ -22,7 +22,7 @@ class UnmuteCommand extends Command {
     async messageRun(message, args) {
         const member = await args.pick('member').catch(() => null);
 
-        if (!member) return commonMessages.sendUsageEmbed(this, message, args);
+        if (!member) return sendUsageEmbed(this, args, message);
         if (member.id === message.client.user.id) return message.channel.send('You can\'t mute me in the first place!');
         if (member.roles.cache.some(role => role.name === roles.moderatorRole)) return message.channel.send('Moderators can\'t be muted!');
         if (!member.roles.cache.some(role => role.name === roles.mutedRole)) return message.channel.send('That member is not muted.');
@@ -30,20 +30,14 @@ class UnmuteCommand extends Command {
         const mutedRole = await member.guild.roles.cache.find(role => role.name === roles.mutedRole);
         const logsChannel = await message.guild.channels.cache.find(ch => ch.name === channels.logsChannel);
 
-        const logEmbed = new EmbedBuilder()
-            .setColor(0xfbfbfb)
-            .setAuthor({ name: `${member.user.username} was unmuted.`, iconURL: member.displayAvatarURL({ extension: 'png', dynamic: true }) })
-            .addFields(
-                { name: 'Member:', value: `${member}`, inline: true },
-                { name: 'Moderator:', value: `${message.author}`, inline: true },
-            )
-            .setFooter({ text: `ID: ${member.user.id}` })
-            .setTimestamp();
-        
-        const successEmbed = new EmbedBuilder()
-            .setColor(0xfbfbfb)
-            .setAuthor({ name: `${member.user.username} has been unmuted.`, iconURL: member.displayAvatarURL({ dynamic: true }) })
-            .setTimestamp();
+        const logEmbed = createBasicEmbed(`${member.user.username} was unmuted.`, member);
+        logEmbed.addFields(
+            { name: 'Member:', value: `${member}`, inline: true },
+            { name: 'Moderator:', value: `${message.author}`, inline: true },
+        );
+        logEmbed.setFooter({ text: `ID: ${member.user.id}` });
+
+        const successEmbed = createBasicEmbed(`${member.user.username} has been unmuted.`, member);
 
         try {
             await member.roles.remove(mutedRole);

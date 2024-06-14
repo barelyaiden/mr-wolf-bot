@@ -1,6 +1,7 @@
 const { Command } = require('@sapphire/framework');
 const { Time } = require('@sapphire/time-utilities');
 const random = require('random');
+const { fetchEconomyData } = require('../../utilities/economyFunctions');
 
 class LuckCommand extends Command {
     constructor(context, options) {
@@ -15,27 +16,17 @@ class LuckCommand extends Command {
     async messageRun(message) {
         const randomChance = random.int(0, 100);
 
-        let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-
-        if (!selfFagBucks) {
-            await message.client.FagBucks.create({
-                userId: message.author.id,
-                amount: 100,
-                bank: 0
-            });
-
-            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-        }
+        const selfMoneys = await fetchEconomyData(message, message.author.id);
 
         if (randomChance === 1) {
-            await selfFagBucks.update({ amount: selfFagBucks.amount + 1000 });
-            return message.channel.send('Congratulations! You won **1,000 💵 FagBucks**!');
+            await selfMoneys.update({ amount: selfMoneys.amount + 1000 });
+            return message.channel.send('Congratulations! You won **1,000 💵 Moneys**!');
         } else if (randomChance <= 10) {
-            await selfFagBucks.update({ amount: selfFagBucks.amount + 500 });
-            return message.channel.send('Congratulations! You won **500 💵 FagBucks**!');
+            await selfMoneys.update({ amount: selfMoneys.amount + 500 });
+            return message.channel.send('Congratulations! You won **500 💵 Moneys**!');
         } else if (randomChance <= 25) {
-            await selfFagBucks.update({ amount: selfFagBucks.amount + 250 });
-            return message.channel.send('Congratulations! You won **250 💵 FagBucks**!');
+            await selfMoneys.update({ amount: selfMoneys.amount + 250 });
+            return message.channel.send('Congratulations! You won **250 💵 Moneys**!');
         } else {
             const responses = [
                 'Out of luck! The odds were against you.',

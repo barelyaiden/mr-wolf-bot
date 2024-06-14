@@ -1,5 +1,6 @@
 const { Listener } = require('@sapphire/framework');
 const random = require('random');
+const { fetchEconomyData } = require('../utilities/economyFunctions');
 
 class MessageCreateListener extends Listener {
     constructor(context, options) {
@@ -15,19 +16,8 @@ class MessageCreateListener extends Listener {
         const randomChance = random.int(0, 100);
 
         if (randomChance <= 15) {
-            let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-
-            if (!selfFagBucks) {
-                await message.client.FagBucks.create({
-                    userId: message.author.id,
-                    amount: 100,
-                    bank: 0
-                });
-
-                selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-            }
-
-            await selfFagBucks.update({ amount: selfFagBucks.amount + 10 });
+            const selfMoneys = await fetchEconomyData(message, message.author.id);
+            await selfMoneys.update({ amount: selfMoneys.amount + 10 });
         }
     }
 }

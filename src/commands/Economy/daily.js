@@ -1,5 +1,6 @@
 const { Command } = require('@sapphire/framework');
 const { Time } = require('@sapphire/time-utilities');
+const { fetchEconomyData } = require('../../utilities/economyFunctions');
 
 class DailyCommand extends Command {
     constructor(context, options) {
@@ -12,20 +13,9 @@ class DailyCommand extends Command {
     }
 
     async messageRun(message) {
-        let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-
-        if (!selfFagBucks) {
-            await message.client.FagBucks.create({
-                userId: message.author.id,
-                amount: 100,
-                bank: 0
-            });
-
-            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-        }
-
-        await selfFagBucks.update({ amount: selfFagBucks.amount + 100 });
-        return message.channel.send('You have claimed your daily allowance of **100 💵 FagBucks**!');
+        const selfMoneys = await fetchEconomyData(message, message.author.id);
+        await selfMoneys.update({ amount: selfMoneys.amount + 100 });
+        return message.channel.send('You have claimed your daily allowance of **100 💵 Moneys**!');
     }
 }
 

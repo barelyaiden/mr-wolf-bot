@@ -1,6 +1,7 @@
 const { Command } = require('@sapphire/framework');
 const { Time } = require('@sapphire/time-utilities');
 const random = require('random');
+const { fetchEconomyData } = require('../../utilities/economyFunctions');
 
 class FlipCommand extends Command {
     constructor(context, options) {
@@ -35,23 +36,14 @@ class FlipCommand extends Command {
         const sides = ['Heads', 'Tails'];
         const botChoice = sides[random.int(0, sides.length - 1)];
 
-        if (!choice || !choices.includes(choice) || !amount || isNaN(amount) || amount < 0) return message.channel.send(`**[🪙]** ${botChoice}!`);
+        if (!choice || !choices.includes(choice) || !amount || isNaN(amount)) return message.channel.send(`**[🪙]** ${botChoice}!`);
+        if (amount < 0) return message.channel.send('You can only input positive numbers!');
         if (amount % 1 != 0) return message.channel.send('You can only input whole numbers!');
-        if (amount > 1000) return message.channel.send('You can only gamble up to a maximum of **1,000 💵 FagBucks**!');
+        if (amount > 1000) return message.channel.send('You can only gamble up to a maximum of **1,000 💵 Moneys**!');
 
-        let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-
-        if (!selfFagBucks) {
-            await message.client.FagBucks.create({
-                userId: message.author.id,
-                amount: 100,
-                bank: 0
-            });
-
-            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-        }
-
-        if (amount > selfFagBucks.amount) return message.channel.send(`You only have **${selfFagBucks.amount.toLocaleString('en-US')} 💵 FagBucks**!`);
+        const selfMoneys = await fetchEconomyData(message, message.author.id);
+        
+        if (amount > selfMoneys.amount) return message.channel.send(`You only have **${selfMoneys.amount.toLocaleString('en-US')} 💵 Moneys**!`);
 
         const randomChance = random.int(0, 100);
         let multiplier = 2;
@@ -63,11 +55,11 @@ class FlipCommand extends Command {
         }
 
         if (mapChoice[choice] === botChoice) {
-            await selfFagBucks.update({ amount: (selfFagBucks.amount - amount) + (amount * multiplier) });
-            return message.channel.send(`**[🪙]** ${botChoice}!\n**You gained ${((amount * multiplier) - amount).toLocaleString('en-US')} 💵 FagBucks!**`);
+            await selfMoneys.update({ amount: (selfMoneys.amount - amount) + (amount * multiplier) });
+            return message.channel.send(`**[🪙]** ${botChoice}!\n**You gained ${((amount * multiplier) - amount).toLocaleString('en-US')} 💵 Moneys!**`);
         } else {
-            await selfFagBucks.update({ amount: selfFagBucks.amount - amount });
-            return message.channel.send(`**[🪙]** ${botChoice}!\n**You lost ${amount.toLocaleString('en-US')} 💵 FagBucks!**`);
+            await selfMoneys.update({ amount: selfMoneys.amount - amount });
+            return message.channel.send(`**[🪙]** ${botChoice}!\n**You lost ${amount.toLocaleString('en-US')} 💵 Moneys!**`);
         }
     }
 }

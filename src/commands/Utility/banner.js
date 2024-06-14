@@ -1,5 +1,6 @@
 const { Command } = require('@sapphire/framework');
 const { EmbedBuilder } = require('discord.js');
+const { embedColor } = require('../../utilities/commonMessages');
 
 class BannerCommand extends Command {
     constructor(context, options) {
@@ -19,7 +20,7 @@ class BannerCommand extends Command {
         const member = await args.pick('member').catch(() => null);
         let fetchedMember, msg, avatar;
 
-        if (!member || member.user.id === message.author.id) {
+        if (!member || member && member.user.id === message.author.id) {
             fetchedMember = await message.author.fetch();
             msg = 'Your Banner:';
             avatar = message.author.displayAvatarURL({ dynamic: true });
@@ -32,7 +33,7 @@ class BannerCommand extends Command {
         }
 
         const bannerEmbed = new EmbedBuilder()
-            .setColor(0xfbfbfb)
+            .setColor(embedColor)
             .setAuthor({ name: msg, iconURL: avatar })
             .setImage(fetchedMember.bannerURL({ extension: 'png', dynamic: true, size: 1024 }))
             .setTimestamp();

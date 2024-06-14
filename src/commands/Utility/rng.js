@@ -6,7 +6,7 @@ class RNGCommand extends Command {
         super(context, {
             ...options,
             name: 'rng',
-            description: 'Generate a random number within a given range.',
+            description: 'Generate a random number between two given numbers.',
             detailedDescription: {
                 usage: '[first number] [second number]',
                 example: '10 40'

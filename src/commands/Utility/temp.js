@@ -1,5 +1,5 @@
 const { Command } = require('@sapphire/framework');
-const commonMessages = require('../../utilities/commonMessages');
+const { sendUsageEmbed } = require('../../utilities/commonMessages');
 
 class TempsCommand extends Command {
     constructor(context, options) {
@@ -17,7 +17,7 @@ class TempsCommand extends Command {
 
     async messageRun(message, args) {
         const temperature = await args.pick('string').catch(() => null);
-        if (!temperature || isNaN(temperature.charAt(0)) && !/[CF]$/.test(temperature)) return commonMessages.sendUsageEmbed(this, message, args);
+        if (!temperature || isNaN(temperature.charAt(0)) && !/[CF]$/.test(temperature)) return sendUsageEmbed(this, args, message);
 
         let convertedTemperature;
 

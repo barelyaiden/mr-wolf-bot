@@ -1,8 +1,9 @@
 const { Command } = require('@sapphire/framework');
 const { EmbedBuilder } = require('discord.js');
-const { owners } = require('../../../config.json');
 const fs = require('node:fs');
 const random = require('random');
+const { embedColor } = require('../../utilities/commonMessages');
+const { owners } = require('../../../config.json');
 
 class AvatarCommand extends Command {
     constructor(context, options) {
@@ -23,7 +24,7 @@ class AvatarCommand extends Command {
         let msg, avatar;
         let isAiden = false;
 
-        if (!member || member.user.id === message.author.id) {
+        if (!member || member && member.user.id === message.author.id) {
             if (!message.member.displayAvatarURL()) return message.channel.send('You don\'t have an avatar.');
             msg = 'Your Avatar:';
             avatar = message.member.displayAvatarURL({ extension: 'png', dynamic: true, size: 1024 });
@@ -39,7 +40,7 @@ class AvatarCommand extends Command {
         }
 
         const avatarEmbed = new EmbedBuilder()
-            .setColor(0xfbfbfb)
+            .setColor(embedColor)
             .setAuthor({ name: msg, iconURL: avatar })
             .setImage(avatar)
             .setTimestamp();

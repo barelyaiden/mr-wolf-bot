@@ -1,7 +1,8 @@
 const { Command } = require('@sapphire/framework');
 const { Time } = require('@sapphire/time-utilities');
 const random = require('random');
-const commonMessages = require('../../utilities/commonMessages');
+const { sendUsageEmbed } = require('../../utilities/commonMessages');
+const { fetchEconomyData } = require('../../utilities/economyFunctions');
 
 class RpsCommand extends Command {
     constructor(context, options) {
@@ -32,22 +33,12 @@ class RpsCommand extends Command {
             's': 'Scissors'
         };
 
-        if (!choice || !choices.includes(choice)) return commonMessages.sendUsageEmbed(this, message, args);
+        if (!choice || !choices.includes(choice)) return sendUsageEmbed(this, args, message);
 
         const objects = ['Rock', 'Paper', 'Scissors'];
         const botChoice = objects[random.int(0, objects.length - 1)];
 
-        let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-
-        if (!selfFagBucks) {
-            await message.client.FagBucks.create({
-                userId: message.author.id,
-                amount: 100,
-                bank: 0
-            });
-
-            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-        }
+        const selfMoneys = await fetchEconomyData(message, message.author.id);
 
         const randomChance = random.int(0, 100);
         let winAmount = 50;
@@ -64,8 +55,8 @@ class RpsCommand extends Command {
             if (mapChoice[choice] === 'Rock') {
                 return message.channel.send(`**[🪨]** Draw! You both chose **${botChoice}**!`);
             } else if (mapChoice[choice] === 'Paper') {
-                await selfFagBucks.update({ amount: selfFagBucks.amount + winAmount });
-                return message.channel.send(`**[🪨]** You won! The bot chose **${botChoice}**!\n**You win ${winAmount} 💵 FagBucks!**`);
+                await selfMoneys.update({ amount: selfMoneys.amount + winAmount });
+                return message.channel.send(`**[🪨]** You won! The bot chose **${botChoice}**!\n**You win ${winAmount} 💵 Moneys!**`);
             } else if (mapChoice[choice] === 'Scissors') {
                 return message.channel.send(`**[🪨]** You lost! The bot chose **${botChoice}**!`);
             }
@@ -75,13 +66,13 @@ class RpsCommand extends Command {
             } else if (mapChoice[choice] === 'Paper') {
                 return message.channel.send(`**[📃]** Draw! You both chose **${botChoice}**!`);
             } else if (mapChoice[choice] === 'Scissors') {
-                await selfFagBucks.update({ amount: selfFagBucks.amount + winAmount });
-                return message.channel.send(`**[📃]** You won! The bot chose **${botChoice}**!\n**You win ${winAmount} 💵 FagBucks!**`);
+                await selfMoneys.update({ amount: selfMoneys.amount + winAmount });
+                return message.channel.send(`**[📃]** You won! The bot chose **${botChoice}**!\n**You win ${winAmount} 💵 Moneys!**`);
             }
         } else if (botChoice === 'Scissors') {
             if (mapChoice[choice] === 'Rock') {
-                await selfFagBucks.update({ amount: selfFagBucks.amount + winAmount });
-                return message.channel.send(`**[✂️]** You won! The bot chose **${botChoice}**!\n**You win ${winAmount} 💵 FagBucks!**`);
+                await selfMoneys.update({ amount: selfMoneys.amount + winAmount });
+                return message.channel.send(`**[✂️]** You won! The bot chose **${botChoice}**!\n**You win ${winAmount} 💵 Moneys!**`);
             } else if (mapChoice[choice] === 'Paper') {
                 return message.channel.send(`**[✂️]** You lost! The bot chose **${botChoice}**!`);
             } else if (mapChoice[choice] === 'Scissors') {

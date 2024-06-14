@@ -1,6 +1,6 @@
 const { Command } = require('@sapphire/framework');
 const random = require('random');
-const commonMessages = require('../../utilities/commonMessages');
+const { sendUsageEmbed } = require('../../utilities/commonMessages');
 
 class ChooseCommand extends Command {
     constructor(context, options) {
@@ -17,7 +17,7 @@ class ChooseCommand extends Command {
 
     async messageRun(message, args) {
         const input = await args.rest('string').catch(() => null);
-        if (!input) return commonMessages.sendUsageEmbed(this, message, args);
+        if (!input) return sendUsageEmbed(this, args, message);
         const items = input.split(', ');
         if (items.length < 2) return message.channel.send(`**[🤔]** I choose the only possible option: **${items[0]}**`);
         return message.channel.send(`**[🤔]** ${items[random.int(0, items.length - 1)]}`);

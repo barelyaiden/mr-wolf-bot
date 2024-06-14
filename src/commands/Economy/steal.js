@@ -1,7 +1,8 @@
 const { Command } = require('@sapphire/framework');
 const { Time } = require('@sapphire/time-utilities');
 const random = require('random');
-const commonMessages = require('../../utilities/commonMessages');
+const { sendUsageEmbed } = require('../../utilities/commonMessages');
+const { fetchEconomyData } = require('../../utilities/economyFunctions');
 
 class StealCommand extends Command {
     constructor(context, options) {
@@ -14,7 +15,7 @@ class StealCommand extends Command {
                 usage: '[member]',
                 example: '@thepoopwitch'
             },
-            cooldownDelay: Time.Minute * 10
+            cooldownDelay: Time.Minute * 30
         });
     }
 
@@ -22,11 +23,10 @@ class StealCommand extends Command {
         const member = await args.pick('member').catch(() => null);
         if (!member) {
             await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
-            return commonMessages.sendUsageEmbed(this, message, args);
+            return sendUsageEmbed(this, args, message);
         }
 
         if (member.user.id === message.client.user.id) {
-            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             const responses = [
                 'If you steal my money you basically lose yours pal.',
                 'Okay but it\'s gonna come out of your own pockets.',
@@ -35,9 +35,9 @@ class StealCommand extends Command {
                 'Can\'t steal from me! ¯\_(ツ)_/¯',
                 'in the stripped club. straight up "jorking it". and by "it", haha, well. let\'s justr say. My peanits'
             ];
+            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             return message.channel.send(responses[random.int(0, responses.length - 1)]);
         } else if (member.user.bot) {
-            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             const responses = [
                 'Okay well that\'s just mean if you wanna steal from an innocent little bot 🥺',
                 'I don\'t even care enough to answer back.',
@@ -46,9 +46,9 @@ class StealCommand extends Command {
                 'Can\'t steal from bots either! ¯\_(ツ)_/¯',
                 'KILL YOURSELF'
             ];
+            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             return message.channel.send(responses[random.int(0, responses.length - 1)]);
         } else if (member.user.id === message.author.id) {
-            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             const responses = [
                 'How would you even steal from yourself? That\'s stupid.',
                 'Hey pal, did you blow in from stupid town?',
@@ -57,59 +57,42 @@ class StealCommand extends Command {
                 'You unsuccessfully stole from yourself! Cause you can\'t. Dumbass.',
                 'Can you stop trying this already?'
             ];
+            await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
             return message.channel.send(responses[random.int(0, responses.length - 1)]);
         }
 
-        const { count, rows } = await message.client.FagBucks.findAndCountAll({ order: [['amount', 'DESC']] });
+        const { count, rows } = await message.client.Moneys.findAndCountAll({ order: [['amount', 'DESC']] });
 
         if (count > 0) {
-            if (message.author.id === rows[0].userId) return message.channel.send('You\'re already at the top. YOU WON CAPITALISM. **WHAT ELSE DO YOU WANT.**');
+            if (message.author.id === rows[0].userId) {
+                await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
+                return message.channel.send('You\'re already at the top. YOU WON CAPITALISM. **WHAT ELSE DO YOU WANT.**');
+            }
         }
 
-        let selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
+        const selfMoneys = await fetchEconomyData(message, message.author.id);
+        const Moneys = await fetchEconomyData(message, member.user.id);
 
-        if (!selfFagBucks) {
-            await message.client.FagBucks.create({
-                userId: message.author.id,
-                amount: 100,
-                bank: 0
-            });
-
-            selfFagBucks = await message.client.FagBucks.findOne({ where: { userId: message.author.id } });
-        }
-
-        let fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
-
-        if (!fagBucks) {
-            await message.client.FagBucks.create({
-                userId: member.user.id,
-                amount: 100,
-                bank: 0
-            });
-
-            fagBucks = await message.client.FagBucks.findOne({ where: { userId: member.user.id } });
-        }
-
-        if (fagBucks.amount < 500) {
+        if (Moneys.amount < 500) {
             await this.container.stores.get('preconditions').get('Cooldown').buckets.delete(this);
-            return message.channel.send(`${member.user.username} does not have enough **💵 FagBucks** for you to steal!`);
+            return message.channel.send(`${member.user.username} does not have enough **💵 Moneys** for you to steal!`);
         }
 
         const randomChance = random.int(0, 100);
 
         if (randomChance === 1) {
-            const half = fagBucks.amount - (Math.round(fagBucks.amount / 2));
-            await fagBucks.update({ amount: fagBucks.amount - half });
-            await selfFagBucks.update({ amount: selfFagBucks.amount + half });
-            return message.channel.send(`You tried pickpocketing ${member.user.username} and STOLE HALF THEIR MONEY! **${half.toLocaleString('en-US')} 💵 FagBucks**!`);
+            const half = Moneys.amount - (Math.round(Moneys.amount / 2));
+            await Moneys.update({ amount: Moneys.amount - half });
+            await selfMoneys.update({ amount: selfMoneys.amount + half });
+            return message.channel.send(`You tried pickpocketing ${member.user.username} and STOLE HALF OF THEIR MONEY! **${half.toLocaleString('en-US')} 💵 Moneys**!`);
         } else if (randomChance <= 25) {
-            await fagBucks.update({ amount: fagBucks.amount - 250 });
-            await selfFagBucks.update({ amount: selfFagBucks.amount + 250 });
-            return message.channel.send(`You tried pickpocketing ${member.user.username} and stole **250 💵 FagBucks**!`);
+            await Moneys.update({ amount: Moneys.amount - 250 });
+            await selfMoneys.update({ amount: selfMoneys.amount + 250 });
+            return message.channel.send(`You tried pickpocketing ${member.user.username} and stole **250 💵 Moneys**!`);
         } else if (randomChance <= 50) {
-            await fagBucks.update({ amount: fagBucks.amount - 100 });
-            await selfFagBucks.update({ amount: selfFagBucks.amount + 100 });
-            return message.channel.send(`You tried pickpocketing ${member.user.username} and stole **100 💵 FagBucks**!`);
+            await Moneys.update({ amount: Moneys.amount - 100 });
+            await selfMoneys.update({ amount: selfMoneys.amount + 100 });
+            return message.channel.send(`You tried pickpocketing ${member.user.username} and stole **100 💵 Moneys**!`);
         } else {
             const responses = [
                 `You tried pickpocketing ${member.user.username} but they turned around and caught you in the act!`,

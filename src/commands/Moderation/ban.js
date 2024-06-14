@@ -1,7 +1,7 @@
 const { Command } = require('@sapphire/framework');
-const { PermissionsBitField, EmbedBuilder } = require('discord.js');
+const { PermissionsBitField } = require('discord.js');
+const { createBasicEmbed, sendUsageEmbed } = require('../../utilities/commonMessages');
 const { roles, channels } = require('../../../config.json');
-const commonMessages = require('../../utilities/commonMessages');
 
 class BanCommand extends Command {
     constructor(context, options) {
@@ -22,34 +22,28 @@ class BanCommand extends Command {
         const member = await args.pick('member').catch(() => null);
         const reason = args.finished ? 'No reason ¯\\_(ツ)_/¯' : await args.rest('string');
 
-        if (!member) return commonMessages.sendUsageEmbed(this, message, args);
+        if (!member) return sendUsageEmbed(this, args, message);
         if (member.id === message.client.user.id) return message.channel.send('Can\'t ban me!');
         if (member.roles.cache.some(role => role.name === roles.moderatorRole)) return message.channel.send('Can\'t ban moderators!');
 
         const logsChannel = await message.guild.channels.cache.find(ch => ch.name === channels.logsChannel);
         
-        const logEmbed = new EmbedBuilder()
-            .setColor(0xfbfbfb)
-            .setAuthor({ name: `${member.user.username} was banned.`, iconURL: member.displayAvatarURL({ dynamic: true }) })
-            .addFields(
-                { name: 'Member:', value: `${member}`, inline: true },
-                { name: 'Moderator:', value: `${message.author}`, inline: true },
-                { name: 'Reason:', value: reason }
-            )
-            .setFooter({ text: `ID: ${member.user.id}` })
-            .setTimestamp();
-        
-        const successEmbed = new EmbedBuilder()
-            .setColor(0xfbfbfb)
-            .setAuthor({ name: `${member.user.username} has been banned.`, iconURL: member.displayAvatarURL({ dynamic: true }) })
-            .addFields(
-                { name: 'Reason:', value: reason }
-            )
-            .setTimestamp();
+        const logEmbed = createBasicEmbed(`${member.user.username} was banned.`, member);
+        logEmbed.addFields(
+            { name: 'Member:', value: `${member}`, inline: true },
+            { name: 'Moderator:', value: `${message.author}`, inline: true },
+            { name: 'Reason:', value: reason }
+        );
+        logEmbed.setFooter({ text: `ID: ${member.user.id}` });
+
+        const successEmbed = createBasicEmbed(`${member.user.username} has been banned.`, member);
+        successEmbed.addFields(
+            { name: 'Reason:', value: reason }
+        );
 
         try {
             await member.createDM();
-            await member.send(`You have been banned from ${message.guild.name}: ${reason}`).catch(() => this.container.logger.info(`Couldn't DM ${member.user.username} (${member.user.id}) for getting banned.`));
+            await member.send(`You have been banned from ${message.guild.name}: ${reason}`).catch(() => this.container.logger.info(`Could not DM ${member.user.username} (${member.user.id}) for getting banned.`));
             await member.ban({ reason: reason });
             await logsChannel.send({ embeds: [logEmbed] });
             return message.channel.send({ embeds: [successEmbed] });
