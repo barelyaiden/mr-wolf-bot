@@ -1,3 +1,10 @@
+## [1.1.12] - 2024-06-15
+
+### Changed
+
+- You can now optionally gamble money on the `!rps` command if you want to have a chance at doubling your cash instead (this is not required)
+- You can now order the leaderboard data in the oposite order from poorest to richest by giving the "asc" argument like so: `!leaderboard asc`
+
 ## [1.1.11] - 2024-06-14
 
 ### Changed

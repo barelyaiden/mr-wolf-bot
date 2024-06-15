@@ -8,11 +8,17 @@ class LeaderboardCommand extends Command {
             ...options,
             name: 'leaderboard',
             aliases: ['lb', 'top'],
-            description: 'Check the server leaderboard!'
+            description: 'Check the server leaderboard!',
+            detailedDescription: {
+                usage: '(order)',
+                example: 'asc'
+            }
         });
     }
 
-    async messageRun(message) {
+    async messageRun(message, args) {
+        const inputOrder = await args.pick('string').catch(() => null);
+
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
@@ -26,7 +32,10 @@ class LeaderboardCommand extends Command {
                     .setEmoji('➡️'),
             );
 
-        const { count, rows } = await message.client.Moneys.findAndCountAll({ order: [['amount', 'DESC']] });
+        let order = 'DESC';
+        if (inputOrder && inputOrder === 'asc') order = 'ASC';
+
+        const { count, rows } = await message.client.Moneys.findAndCountAll({ order: [['amount', order]] });
 
         const emptyLeaderboardEmbed = new EmbedBuilder()
             .setColor(embedColor)
