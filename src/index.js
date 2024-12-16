@@ -75,4 +75,12 @@ client.DeadMembers = client.sequelize.define('deadMembers', {
     }
 });
 
+client.MovieList = client.sequelize.define('movieList', {
+    movieName: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+    }
+});
+
 client.login(token);

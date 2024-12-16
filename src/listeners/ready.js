@@ -18,6 +18,7 @@ class ReadyListener extends Listener {
         await client.TimeZones.sync();
         await client.Moneys.sync();
         await client.DeadMembers.sync();
+        await client.MovieList.sync();
 
         const { username, id } = client.user;
         this.container.logger.info(`Successfully logged in as ${username} (${id})!`);

@@ -1,3 +1,13 @@
+## [1.1.13] - 2024-12-16
+
+### Added
+
+- The `!movielist` command
+
+### Changed
+
+- Updated dependencies
+
 ## [1.1.12] - 2024-06-15
 
 ### Changed
